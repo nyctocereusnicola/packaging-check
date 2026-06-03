@@ -561,6 +561,8 @@
       text-decoration: none;
       font-size: 0.78rem;
       transition: all 0.15s var(--ease);
+      margin-right: 6px;
+      margin-bottom: 4px;
     }
     .ev-card .ev-link:hover { background: var(--accent-glow2); border-color: var(--accent); }
 
@@ -643,6 +645,35 @@
     }
     .practice-list p { margin-bottom: 6px; }
     .practice-list strong { color: var(--text); }
+
+    /* ===== REPORT FORM ===== */
+    .report-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .report-section h4 {
+      font-size: 0.85rem; font-weight: 600; margin-bottom: 12px;
+    }
+    .report-section label {
+      display: block; font-size: 0.78rem; color: var(--text2); margin-bottom: 4px; margin-top: 10px;
+    }
+    .report-section label:first-of-type { margin-top: 0; }
+    .report-section input, .report-section textarea, .report-section select {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: var(--font);
+      outline: none;
+    }
+    .report-section input:focus, .report-section textarea:focus { border-color: var(--accent); }
+    .report-section textarea { min-height: 60px; resize: vertical; }
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 640px) {
@@ -844,7 +875,7 @@
             <span class="setup-status off" id="imgbbStatus">未配置</span>
           </div>
           <div class="setup-desc" id="imgbbDesc">
-            配置免费 API Key 后，上传图片自动获取公网链接，<strong>一键同时打开6大搜图平台的搜索结果</strong>，无需逐个手动贴图。<a href="https://api.imgbb.com/" target="_blank">1分钟免费注册获取 →</a>
+            配置免费 API Key 后，上传图片自动获取公网链接，<strong>一键同时打开8大搜图平台的搜索结果</strong>，无需逐个手动贴图。<a href="https://api.imgbb.com/" target="_blank">1分钟免费注册获取 →</a>
           </div>
           <div class="input-row">
             <input type="text" id="imgbbKeyInput" placeholder="粘贴你的 imgbb API Key">
@@ -885,7 +916,7 @@
 
         <!-- 一键全网搜图 -->
         <button class="btn-search-all disabled" id="btnSearchAll" onclick="searchAllEngines()">
-          ⚡ 一键全网搜图（同时打开6个平台）
+          ⚡ 一键全网搜图（同时打开8个平台）
         </button>
 
         <div class="sub-label">搜图平台</div>
@@ -932,18 +963,66 @@
               <div class="lc-desc">微信生态+国内图片</div>
             </div>
           </a>
+          <a class="link-card disabled" id="btn-xiaohongshu" target="_blank" rel="noopener">
+            <span class="lc-icon">XH</span>
+            <div class="lc-text">
+              <div class="lc-name">小红书 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">搜索框相机图标搜同款</div>
+            </div>
+          </a>
+          <a class="link-card disabled" id="btn-douyin" target="_blank" rel="noopener">
+            <span class="lc-icon">DY</span>
+            <div class="lc-text">
+              <div class="lc-name">抖音 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">搜索框拍照搜同款商品</div>
+            </div>
+          </a>
         </div>
 
-        <div class="sub-label">电商平台操作指引</div>
-        <div class="info-strip">
-          <ul>
-            <li><strong>淘宝/天猫</strong> — 搜索框右侧相机图标 → 上传图片搜同款</li>
-            <li><strong>京东</strong> — 搜索框相机图标 → 拍照购</li>
-            <li><strong>拼多多</strong> — 搜索框相机图标 → 搜同款</li>
-            <li><strong>1688</strong> — 以图搜图找 OEM 公版包装</li>
-            <li><strong>Amazon</strong> — 电商图搜，排查海外市场</li>
-            <li><strong>AliExpress</strong> — 速卖通图搜，排查出口市场</li>
-          </ul>
+        <div class="sub-label">电商平台（搜同款/相似包装）</div>
+        <div class="link-grid">
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.taobao.com/">
+            <span class="lc-icon">TB</span>
+            <div class="lc-text">
+              <div class="lc-name">淘宝/天猫 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">搜索框相机图标→以图搜图</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.jd.com/">
+            <span class="lc-icon">JD</span>
+            <div class="lc-text">
+              <div class="lc-name">京东 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">搜索框相机图标→拍照购</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.pinduoduo.com/">
+            <span class="lc-icon">PD</span>
+            <div class="lc-text">
+              <div class="lc-name">拼多多 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">搜索框相机图标→搜同款</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.1688.com/">
+            <span class="lc-icon">16</span>
+            <div class="lc-text">
+              <div class="lc-name">1688 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">以图搜图找OEM公版包装</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.amazon.com/">
+            <span class="lc-icon">AZ</span>
+            <div class="lc-text">
+              <div class="lc-name">Amazon <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">电商图搜，排查海外市场</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.aliexpress.com/">
+            <span class="lc-icon">AE</span>
+            <div class="lc-text">
+              <div class="lc-name">AliExpress <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">速卖通图搜，排查出口市场</div>
+            </div>
+          </a>
         </div>
 
         <div class="sub-label">设计社区</div>
@@ -1009,7 +1088,7 @@
             <span class="lc-icon">CC</span>
             <div class="lc-text">
               <div class="lc-name">中国版权保护中心 <span class="key-badge free">免费</span></div>
-              <div class="lc-desc">作品登记公告查询</div>
+              <div class="lc-desc">作品登记公告查询（需中国大陆网络）</div>
             </div>
           </a>
           <a class="link-card" target="_blank" rel="noopener" href="https://www.ncac.gov.cn/">
@@ -1019,6 +1098,24 @@
               <div class="lc-desc">版权法律法规+公告</div>
             </div>
           </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.ccopyright.com/index.php?optionid=1050">
+            <span class="lc-icon">CC2</span>
+            <div class="lc-text">
+              <div class="lc-name">版权登记档案查询 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">登记档案查询入口（备用）</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="info-strip accent-l" style="margin-top:16px">
+          <h4>国际版权相关公约</h4>
+          <ul>
+            <li><strong>《伯尔尼公约》</strong> — 181国加入，版权自动保护的国际基础，中国1992年加入</li>
+            <li><strong>《世界版权公约》</strong> — UCC，与伯尔尼公约互补</li>
+            <li><strong>《TRIPS协定》</strong> — WTO框架下知识产权保护最低标准</li>
+            <li><strong>《WIPO版权条约》(WCT)</strong> — 数字环境下的版权保护</li>
+          </ul>
+          <p style="margin-top:8px">中国是以上所有公约的缔约国，在国内登记的版权在成员国间互认保护</p>
         </div>
 
         <div class="sub-label">辅助排查</div>
@@ -1070,7 +1167,7 @@
             <li><strong>文字商标</strong> — 查品牌名是否已被注册</li>
             <li><strong>图形商标</strong> — 查包装上的图形标识是否近似</li>
             <li><strong>立体商标</strong> — 查瓶型/盒型的立体形状是否已注册</li>
-            <li>核对 <strong>相同/近似 + 同类商品</strong>（包装多为第16类，卫生用品为第5类）</li>
+            <li>核对 <strong>相同/近似 + 同类商品</strong>（需查全相关类别）</li>
           </ul>
         </div>
 
@@ -1102,17 +1199,53 @@
               <div class="lc-desc">美国商标检索</div>
             </div>
           </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.wipo.int/madrid/monitor/">
+            <span class="lc-icon">MD</span>
+            <div class="lc-text">
+              <div class="lc-name">马德里体系 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">国际商标注册查询（130+成员国）</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.wipo.int/branddb/en/">
+            <span class="lc-icon">WI</span>
+            <div class="lc-text">
+              <div class="lc-name">WIPO BrandDB <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">全球品牌/商标数据库</div>
+            </div>
+          </a>
         </div>
 
         <div class="info-strip warn-l" style="margin-top:20px">
-          <h4>包装相关商标分类参考</h4>
+          <h4>中国商标法 — 包装相关全品类分类（尼斯分类）</h4>
+          <p style="margin-bottom:8px">包装设计需同时查以下所有相关类别，<strong>跨类近似也可能构成侵权</strong>：</p>
           <ul>
-            <li><strong>第5类</strong> — 医药、卫生用品（卫生巾、护理用品）</li>
-            <li><strong>第16类</strong> — 纸制品、包装材料、印刷品</li>
-            <li><strong>第21类</strong> — 家用容器、化妆用具</li>
-            <li><strong>第3类</strong> — 化妆品、清洁用品</li>
+            <li><strong>第1类</strong> — 化学原料、化学制剂（消毒剂、净水剂等）</li>
+            <li><strong>第3类</strong> — 化妆品、洗护用品、清洁剂</li>
+            <li><strong>第5类</strong> — 医药、卫生用品（卫生巾、护理用品、医用敷料）</li>
+            <li><strong>第8类</strong> — 手工器具（美妆工具等）</li>
+            <li><strong>第9类</strong> — 科学仪器、APP软件</li>
+            <li><strong>第10类</strong> — 医疗器械</li>
+            <li><strong>第16类</strong> — 纸制品、包装材料、印刷品、纸巾</li>
+            <li><strong>第20类</strong> — 家具、容器（非金属包装容器）</li>
+            <li><strong>第21类</strong> — 家用容器、化妆用具、梳妆盒</li>
+            <li><strong>第24类</strong> — 纺织品、布料（包装袋/布袋）</li>
+            <li><strong>第29类</strong> — 食品（罐头、密封包装食品）</li>
+            <li><strong>第30类</strong> — 调味品、方便食品</li>
+            <li><strong>第35类</strong> — 广告、商业管理（品牌服务类保护）</li>
+            <li><strong>第40类</strong> — 材料加工（印刷、包装加工）</li>
           </ul>
-          <p style="margin-top:8px">查商标时要同时查<strong>相关类别</strong>，跨类近似也可能构成侵权</p>
+        </div>
+
+        <div class="info-strip accent-l">
+          <h4>国际商标法 — 主要体系</h4>
+          <ul>
+            <li><strong>马德里体系</strong> — 一次申请，130+成员国生效，中国1995年加入</li>
+            <li><strong>欧盟商标(EUTM)</strong> — 一次注册，27个欧盟成员国有效</li>
+            <li><strong>美国(Lanham Act)</strong> — 使用在先原则，需提供使用证据</li>
+            <li><strong>东盟(ASEAN)</strong> — 各国独立注册，无统一体系</li>
+            <li><strong>非洲(OAPI/ARIPO)</strong> — 区域性商标体系</li>
+          </ul>
+          <p style="margin-top:8px">出口产品<strong>必须查目标国商标</strong>，国内注册≠海外受保护</p>
         </div>
 
         <div class="sub-label">品牌与企业查询</div>
@@ -1148,8 +1281,21 @@
       </div>
       <div class="panel-body">
 
+        <!-- 检测信息（用于导出报告） -->
+        <div class="report-section">
+          <h4>📋 检测项目信息</h4>
+          <label>产品/包装名称</label>
+          <input type="text" id="reportProductName" placeholder="如：艾舒宝卫生巾盒装包装">
+          <label>委托方/品牌方</label>
+          <input type="text" id="reportClient" placeholder="如：湖北艾舒宝生活用品有限公司">
+          <label>检测人</label>
+          <input type="text" id="reportChecker" placeholder="如：张三">
+          <label>备注</label>
+          <textarea id="reportNotes" placeholder="其他需要记录的信息"></textarea>
+        </div>
+
         <div class="prog-track"><div class="prog-fill" id="progressFill"></div></div>
-        <div class="prog-text" id="progressText">0 / 12 已完成</div>
+        <div class="prog-text" id="progressText">0 / 14 已完成</div>
 
         <hr class="hr">
 
@@ -1182,7 +1328,7 @@
             <input type="checkbox" onchange="updateProgress()" data-category="copyright">
             <div>
               <div class="cl-label">② 著作权登记公告查询</div>
-              <div class="cl-desc">在中国版权保护中心查包装名称/设计方/著作权人（注意：查不到≠无版权）</div>
+              <div class="cl-desc">在中国版权保护中心/国家版权局查包装名称/设计方/著作权人（注意：查不到≠无版权）</div>
               <a class="cl-link" href="https://www.ccopyright.com.cn/" target="_blank">→ 前往中国版权保护中心</a>
             </div>
           </li>
@@ -1204,8 +1350,16 @@
             <input type="checkbox" onchange="updateProgress()" data-category="trademark">
             <div>
               <div class="cl-label">③ 商标冲突查询（含立体商标）</div>
-              <div class="cl-desc">查文字/图形/立体形状（瓶型/盒型）是否与已注册商标冲突，核对相同/近似+同类商品</div>
+              <div class="cl-desc">查文字/图形/立体形状（瓶型/盒型）是否与已注册商标冲突，需查全相关类别（5/16/21/3等14类）</div>
               <a class="cl-link" href="https://sbj.cnipa.gov.cn/sbj/sbcx/" target="_blank">→ 前往中国商标网</a>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="trademark">
+            <div>
+              <div class="cl-label">③ 国际商标排查（马德里/目标国）</div>
+              <div class="cl-desc">出口产品需查马德里体系+目标国商标注册，国内注册≠海外受保护</div>
+              <a class="cl-link" href="https://www.wipo.int/madrid/monitor/" target="_blank">→ 前往马德里体系查询</a>
             </div>
           </li>
           <li>
@@ -1226,7 +1380,14 @@
             <input type="checkbox" onchange="updateProgress()" data-category="compare">
             <div>
               <div class="cl-label">④ 电商平台搜同款/相似包装</div>
-              <div class="cl-desc">淘宝/京东/拼多多/1688搜同款+以图搜图，排查市场上的相似包装</div>
+              <div class="cl-desc">淘宝/京东/拼多多/1688/Amazon搜同款+以图搜图，排查市场上的相似包装</div>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="compare">
+            <div>
+              <div class="cl-label">④ 小红书/抖音搜同款包装</div>
+              <div class="cl-desc">小红书搜索框相机搜图+抖音拍照搜同款商品，排查社媒上的相似包装</div>
             </div>
           </li>
           <li>
@@ -1245,7 +1406,7 @@
           </li>
         </ul>
 
-        <button class="btn-export" onclick="exportReport()">导出检测报告 ↓</button>
+        <button class="btn-export" onclick="exportReport()">📄 导出检测报告 ↓</button>
 
       </div>
     </div>
@@ -1267,17 +1428,19 @@
           <div class="ev-card">
             <div class="ev-title">⚡ 区块链存证</div>
             <div class="ev-desc">上传设计稿获取不可篡改的时间戳，几分钟即可完成，费用极低（几元/次）</div>
-            <a class="ev-link" href="https://attest.aliyun.com/" target="_blank">阿里云存证</a>
-            <a class="ev-link" href="https://www.baidu.com/s?wd=区块链存证平台" target="_blank" style="margin-left:6px">更多平台</a>
+            <a class="ev-link" href="https://www.aliyun.com/solution/blockchain/tbes" target="_blank">阿里云可信存证</a>
+            <a class="ev-link" href="https://www.baidu.com/s?wd=区块链存证平台" target="_blank">更多平台</a>
           </div>
           <div class="ev-card">
             <div class="ev-title">📜 著作权登记</div>
             <div class="ev-desc">中国版权保护中心登记，法律直接推定权属，30-60天出证，费用300-500元</div>
             <a class="ev-link" href="https://www.ccopyright.com.cn/" target="_blank">中国版权保护中心</a>
+            <a class="ev-link" href="https://www.ccopyright.com/index.php?optionid=1050" target="_blank">登记档案查询</a>
           </div>
           <div class="ev-card">
             <div class="ev-title">🏛️ 公证</div>
             <div class="ev-desc">对设计稿做公证，法律效力最高，但费用较高（1000-3000元），适合高价值设计</div>
+            <a class="ev-link" href="https://www.12348.gov.cn/" target="_blank">中国法网（查公证处）</a>
             <a class="ev-link" href="https://www.baidu.com/s?wd=在线公证平台" target="_blank">在线公证平台</a>
           </div>
           <div class="ev-card">
@@ -1407,7 +1570,7 @@ async function uploadImage(file) {
           currentImageUrl = data.data.url;
           showPreview(localPreviewUrl, 'public', data.data.url);
           enableImageSearchButtons(data.data.url);
-          showToast('上传成功！点击「一键全网搜图」即可同时搜索6个平台');
+          showToast('上传成功！点击「一键全网搜图」即可同时搜索8个平台');
           loading.classList.remove('active');
           return;
         }
@@ -1490,7 +1653,7 @@ function useImageUrl() {
   localPreviewUrl = url;
   showPreview(url, 'public', url);
   enableImageSearchButtons(url);
-  showToast('URL 已设置！点击「一键全网搜图」即可同时搜索6个平台');
+  showToast('URL 已设置！点击「一键全网搜图」即可同时搜索8个平台');
 }
 
 // ============ 一键全网搜图 ============
@@ -1510,9 +1673,12 @@ function searchAllEngines() {
     urls.forEach((url, i) => {
       setTimeout(() => window.open(url, '_blank'), i * 300);
     });
-    showToast(`正在打开 ${names.length} 个搜图平台...`);
+    // 小红书和抖音只跳搜索页（不支持URL搜图）
+    setTimeout(() => window.open('https://www.xiaohongshu.com/', '_blank'), urls.length * 300);
+    setTimeout(() => window.open('https://www.douyin.com/', '_blank'), (urls.length + 1) * 300);
+    showToast(`正在打开 ${names.length + 2} 个平台...`);
   } else {
-    // 无公网URL：跳转到各平台上传页
+    // 无公网URL：跳转到各平台上传页/搜索页
     const uploadPages = [
       { url: 'https://lens.google.com/', name: 'Google Lens' },
       { url: 'https://tineye.com/', name: 'TinEye' },
@@ -1520,11 +1686,13 @@ function searchAllEngines() {
       { url: 'https://graph.baidu.com/', name: '百度识图' },
       { url: 'https://www.bing.com/visualsearch', name: 'Bing' },
       { url: 'https://pic.sogou.com/', name: '搜狗' },
+      { url: 'https://www.xiaohongshu.com/', name: '小红书' },
+      { url: 'https://www.douyin.com/', name: '抖音' },
     ];
     uploadPages.forEach((p, i) => {
       setTimeout(() => window.open(p.url, '_blank'), i * 300);
     });
-    showToast('正在打开 6 个搜图平台，请在各平台上传图片搜索');
+    showToast('正在打开 8 个搜图平台，请在各平台上传图片搜索');
   }
 }
 
@@ -1539,6 +1707,8 @@ function enableImageSearchButtons(url) {
     'btn-baidu': `https://graph.baidu.com/pcpage/pcsearch?image=${encodedUrl}`,
     'btn-bing': `https://www.bing.com/images/search?q=imgurl:${encodedUrl}&view=detailv2&iss=sbi`,
     'btn-sogou': `https://pic.sogou.com/ris?query=${encodedUrl}&flag=1&drag=0`,
+    'btn-xiaohongshu': 'https://www.xiaohongshu.com/',
+    'btn-douyin': 'https://www.douyin.com/',
   };
 
   Object.entries(btns).forEach(([id, href]) => {
@@ -1561,6 +1731,8 @@ function enableUploadPageButtons() {
     'btn-baidu': 'https://graph.baidu.com/',
     'btn-bing': 'https://www.bing.com/visualsearch',
     'btn-sogou': 'https://pic.sogou.com/',
+    'btn-xiaohongshu': 'https://www.xiaohongshu.com/',
+    'btn-douyin': 'https://www.douyin.com/',
   };
 
   Object.entries(uploadPages).forEach(([id, href]) => {
@@ -1603,7 +1775,7 @@ function updateImgbbStatus(hasKey) {
     statusEl.textContent = '未配置';
     statusEl.className = 'setup-status off';
     setupBox.classList.remove('configured');
-    descEl.innerHTML = '配置免费 API Key 后，上传图片自动获取公网链接，<strong>一键同时打开6大搜图平台的搜索结果</strong>，无需逐个手动贴图。<a href="https://api.imgbb.com/" target="_blank">1分钟免费注册获取 →</a>';
+    descEl.innerHTML = '配置免费 API Key 后，上传图片自动获取公网链接，<strong>一键同时打开8大搜图平台的搜索结果</strong>，无需逐个手动贴图。<a href="https://api.imgbb.com/" target="_blank">1分钟免费注册获取 →</a>';
   }
 }
 
@@ -1655,68 +1827,101 @@ function exportReport() {
   const checks = document.querySelectorAll('.cl-list input[type="checkbox"]');
   const total = checks.length;
   const checked = [...checks].filter(c => c.checked).length;
+  const pct = Math.round(checked / total * 100);
 
-  let report = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-  report += '        包 装 原 创 性 检 测 报 告\n';
-  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-  report += `检测日期: ${new Date().toLocaleString('zh-CN')}\n`;
-  report += `完成进度: ${checked}/${total} (${Math.round(checked/total*100)}%)\n\n`;
+  const productName = document.getElementById('reportProductName').value.trim() || '未填写';
+  const client = document.getElementById('reportClient').value.trim() || '未填写';
+  const checker = document.getElementById('reportChecker').value.trim() || '未填写';
+  const notes = document.getElementById('reportNotes').value.trim() || '无';
+  const now = new Date().toLocaleString('zh-CN');
 
-  report += '────── 四步检测法 ──────\n\n';
+  let report = '';
+  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  report += '           包 装 原 创 性 检 测 报 告\n';
+  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  report += `检测日期：${now}\n`;
+  report += `产品/包装：${productName}\n`;
+  report += `委托方/品牌方：${client}\n`;
+  report += `检测人：${checker}\n`;
+  report += `完成进度：${checked}/${total} (${pct}%)\n`;
+  report += `备注：${notes}\n\n`;
 
+  report += '────────────── 检测项目明细 ──────────────\n\n';
+
+  const categories = {
+    patent:    '① 外观设计专利',
+    copyright: '② 著作权（版权）',
+    trademark: '③ 商标（含立体商标）',
+    compare:   '④ 全网图像比对',
+    evidence:  '证据留存',
+  };
+
+  let currentCat = '';
   checks.forEach((c, i) => {
+    const cat = c.dataset.category;
+    if (cat !== currentCat) {
+      currentCat = cat;
+      report += `\n【${categories[cat] || cat}】\n`;
+    }
     const label = c.closest('li').querySelector('.cl-label').textContent;
-    const status = c.checked ? '✓' : '○';
+    const status = c.checked ? '✓ 已完成' : '○ 未完成';
     report += `  ${status}  ${label}\n`;
   });
 
-  report += '\n────── 检测方法要点 ──────\n\n';
+  // 检测结论区
+  report += '\n────────────── 检测结论 ──────────────\n\n';
+  if (pct === 100) {
+    report += '✓ 所有检测项目已完成\n';
+    report += '建议：如未发现冲突，可进行创作证据留存（区块链存证/著作权登记）\n';
+  } else if (pct >= 70) {
+    report += '⚠ 大部分检测项目已完成，仍有少数项目待核查\n';
+    report += '建议：补全未完成项目后再做最终判断\n';
+  } else {
+    report += '⚠ 检测尚未完成，请继续逐项核查\n';
+    report += '重要：外观设计专利（①）和商标（③）为必查项\n';
+  }
+
+  report += '\n────────────── 四步检测法要点 ──────────────\n\n';
   report += '① 外观设计专利：\n';
   report += '   - 国知局高级检索→选外观设计→洛迦诺09类筛选\n';
-  report += '   - 上传正/侧/顶视图比对相似度\n';
   report += '   - 重点看：相同/近似设计、申请日、法律状态（授权才构成权利）\n';
-  report += '   - 第三方工具：佰腾、Incopat、Patentics可一键导出高相似列表\n\n';
+  report += '   - 出口产品需额外检索WIPO/欧盟/美国\n\n';
   report += '② 著作权：\n';
   report += '   - 中国版权保护中心→作品登记公告查询\n';
-  report += '   - 注意：版权自动保护，查不到≠无版权；查到登记可佐证权属\n\n';
+  report += '   - 版权自动保护（伯尔尼公约），查不到≠无版权\n';
+  report += '   - 字体商用授权是高危区\n\n';
   report += '③ 商标（含立体商标）：\n';
-  report += '   - 查文字/图形/立体形状（瓶型/盒型）是否与已注册商标冲突\n';
-  report += '   - 警惕知名品牌特有包装/装潢（即使无专利也受反不正当竞争法保护）\n\n';
+  report += '   - 查文字/图形/立体形状是否与已注册商标冲突\n';
+  report += '   - 需查全相关类别（5/16/21/3/1/8/9/10/20/24/29/30/35/40）\n';
+  report += '   - 出口产品需查马德里体系+目标国商标\n';
+  report += '   - 警惕知名品牌特有包装/装潢（反不正当竞争法保护）\n\n';
   report += '④ 全网图像比对：\n';
-  report += '   - 搜图平台：Google Lens/百度识图/搜狗识图/TinEye\n';
-  report += '   - 电商平台：淘宝/京东/拼多多/1688搜同款\n';
-  report += '   - 设计社区：站酷/Behance/Dribbble\n';
-  report += '   - 重点排查更早公开的同款/近似设计\n\n';
+  report += '   - 搜图平台：Google Lens/百度识图/搜狗/TinEye/Yandex/Bing\n';
+  report += '   - 社媒平台：小红书/抖音搜同款\n';
+  report += '   - 电商平台：淘宝/京东/拼多多/1688/Amazon\n';
+  report += '   - 设计社区：站酷/Behance/Dribbble\n\n';
 
-  report += '────── 证据留存建议 ──────\n\n';
-  report += '1. 设计完成即做区块链存证（阿里云存证/蚂蚁链）\n';
+  report += '────────────── 证据留存建议 ──────────────\n\n';
+  report += '1. 设计完成即做区块链存证（阿里云可信存证等）\n';
   report += '2. 重要项目做著作权登记（中国版权保护中心，300-500元）\n';
   report += '3. 保留所有设计过程文档（草图、修改记录、沟通记录）\n';
   report += '4. 字体/素材授权协议截图+付款凭证保存\n';
-  report += '5. 出口产品需额外检索目标国专利\n';
+  report += '5. 出口产品需额外检索目标国专利\n\n';
 
-  report += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
-  report += '生成工具: 包装原创性检测 | packaging-check\n';
+  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  report += `生成工具: 包装原创性检测 | packaging-check\n`;
   report += 'https://nyctocereusnicola.github.io/packaging-check/\n';
-  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
 
   const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `包装原创性检测报告_${new Date().toISOString().slice(0,10)}.txt`;
+  a.download = `包装原创性检测报告_${productName}_${new Date().toISOString().slice(0,10)}.txt`;
   a.click();
   URL.revokeObjectURL(url);
 
   showToast('检测报告已导出');
-}
-
-// ============ Toast ============
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 </script>
 
