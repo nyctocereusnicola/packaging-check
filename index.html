@@ -760,7 +760,7 @@
         <div class="upload-zone" id="uploadArea" onclick="document.getElementById('fileInput').click()">
           <div class="uz-icon">↑</div>
           <p>点击上传包装图片或拖拽到此处</p>
-          <p class="uz-hint">支持 JPG / PNG / WebP，最大 10MB → 上传后自动获取公网 URL</p>
+          <p class="uz-hint">支持 JPG / PNG / WebP，最大 10MB → 上传失败可直接粘贴图片公网 URL</p>
           <input type="file" id="fileInput" accept="image/*">
         </div>
 
@@ -1274,35 +1274,97 @@ async function uploadImage(file) {
   const loading = document.getElementById('uploadLoading');
   loading.classList.add('active');
 
+  // 方案1：0x0.st（支持 CORS，无需 API key）
   try {
     const formData = new FormData();
-    formData.append('reqtype', 'fileupload');
-    formData.append('fileToUpload', file);
+    formData.append('file', file);
 
-    const res = await fetch('https://catbox.moe/user/api.php', {
+    const res = await fetch('https://0x0.st', {
       method: 'POST',
-      body: formData
+      body: formData,
+      signal: AbortSignal.timeout(30000)
     });
 
     if (res.ok) {
-      const url = await res.text();
+      const url = (await res.text()).trim();
       if (url.startsWith('https://')) {
         currentImageUrl = url;
         showPreview(url, file.name);
         enableImageSearchButtons(url);
         showToast('图片上传成功');
-      } else {
-        throw new Error('上传返回异常');
+        loading.classList.remove('active');
+        return;
       }
-    } else {
-      throw new Error('上传失败');
     }
+    throw new Error('0x0.st 上传失败');
   } catch (err) {
-    console.error(err);
-    showToast('上传失败，请尝试粘贴图片 URL');
-  } finally {
-    loading.classList.remove('active');
+    console.warn('0x0.st 失败:', err.message);
   }
+
+  // 方案2：litterbox.catbox.moe（临时图床，1小时有效，支持 CORS）
+  try {
+    const formData = new FormData();
+    formData.append('reqtype', 'fileupload');
+    formData.append('time', '1h');
+    formData.append('fileToUpload', file);
+
+    const res = await fetch('https://litterbox.catbox.moe/resources/internals/api.php', {
+      method: 'POST',
+      body: formData,
+      signal: AbortSignal.timeout(30000)
+    });
+
+    if (res.ok) {
+      const url = (await res.text()).trim();
+      if (url.startsWith('https://')) {
+        currentImageUrl = url;
+        showPreview(url, file.name);
+        enableImageSearchButtons(url);
+        showToast('图片上传成功（临时链接，1小时有效）');
+        loading.classList.remove('active');
+        return;
+      }
+    }
+    throw new Error('litterbox 上传失败');
+  } catch (err) {
+    console.warn('litterbox 失败:', err.message);
+  }
+
+  // 方案3：转 base64 直接预览（不依赖图床，但搜图平台可能无法直接使用 URL）
+  try {
+    const dataUrl = await readFileAsDataUrl(file);
+    currentImageUrl = dataUrl;
+    showPreview(dataUrl, file.name);
+    // 以图搜图按钮需要公网 URL，base64 不可用，提示用户手动粘贴
+    disableImageSearchButtons();
+    showToast('图片已加载（本地预览模式），搜图请粘贴图片公网URL');
+    loading.classList.remove('active');
+    return;
+  } catch (err) {
+    console.warn('base64 回退失败:', err.message);
+  }
+
+  loading.classList.remove('active');
+  showToast('上传失败，请直接粘贴图片公网 URL');
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function disableImageSearchButtons() {
+  ['btn-google-lens', 'btn-tineye', 'btn-yandex', 'btn-baidu', 'btn-bing', 'btn-sogou'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.href = '#';
+      el.classList.add('disabled');
+    }
+  });
 }
 
 function useImageUrl() {
