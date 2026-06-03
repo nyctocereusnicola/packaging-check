@@ -343,20 +343,99 @@
     .upload-zone .uz-hint { font-size: 0.76rem; color: var(--text3); margin-top: 8px; }
     .upload-zone input[type="file"] { display: none; }
 
+    /* ===== IMGBB SETUP ===== */
+    .imgbb-setup {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .imgbb-setup.configured {
+      border-color: rgba(61,170,106,0.2);
+      background: rgba(61,170,106,0.03);
+    }
+    .imgbb-setup .setup-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 8px;
+    }
+    .imgbb-setup .setup-title {
+      font-size: 0.88rem; font-weight: 600; color: var(--text);
+    }
+    .imgbb-setup .setup-status {
+      font-size: 0.72rem; padding: 2px 10px; border-radius: 4px; font-weight: 600;
+    }
+    .imgbb-setup .setup-status.on {
+      background: rgba(61,170,106,0.12); color: var(--success);
+    }
+    .imgbb-setup .setup-status.off {
+      background: rgba(255,255,255,0.06); color: var(--text3);
+    }
+    .imgbb-setup .setup-desc {
+      font-size: 0.8rem; color: var(--text2); line-height: 1.7; margin-bottom: 12px;
+    }
+    .imgbb-setup .setup-desc a { color: var(--accent2); text-decoration: none; }
+    .imgbb-setup .setup-desc a:hover { text-decoration: underline; }
+
     /* ===== PREVIEW ===== */
     .preview-wrap { display: none; margin-top: 20px; }
     .preview-wrap.active { display: block; }
-    .preview-img {
-      max-width: 260px; max-height: 180px;
-      border-radius: var(--radius);
+    .preview-inner {
+      display: flex; align-items: flex-start; gap: 20px;
+      padding: 20px;
+      background: var(--bg2);
       border: 1px solid var(--border);
+      border-radius: var(--radius);
     }
-    .preview-url {
-      margin-top: 10px; font-size: 0.76rem;
-      color: var(--accent2); word-break: break-all;
+    .preview-img {
+      max-width: 200px; max-height: 160px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      object-fit: contain;
     }
-    .preview-url a { color: var(--accent2); text-decoration: none; }
-    .preview-url a:hover { text-decoration: underline; }
+    .preview-info { flex: 1; min-width: 0; }
+    .preview-info .pi-label {
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text3); letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .preview-info .pi-url {
+      font-size: 0.8rem; color: var(--accent2);
+      word-break: break-all; line-height: 1.6;
+    }
+    .preview-info .pi-url a { color: var(--accent2); text-decoration: none; }
+    .preview-info .pi-url a:hover { text-decoration: underline; }
+    .preview-info .pi-local {
+      font-size: 0.8rem; color: var(--warn); line-height: 1.6;
+    }
+
+    /* ===== SEARCH ALL BTN ===== */
+    .btn-search-all {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, var(--navy2), var(--navy3));
+      color: #d0ddef;
+      border: 1px solid var(--navy3);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.95rem; font-weight: 600;
+      font-family: var(--font);
+      transition: all 0.2s var(--ease);
+      margin-top: 20px;
+      letter-spacing: 0.02em;
+    }
+    .btn-search-all:hover:not(.disabled) {
+      background: linear-gradient(135deg, var(--navy3), var(--accent));
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 24px rgba(45,125,210,0.3);
+    }
+    .btn-search-all.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
 
     /* ===== INPUT GROUP ===== */
     .input-row { display: flex; gap: 8px; }
@@ -579,6 +658,8 @@
       .nav-inner { padding: 0 16px; }
       .container { padding: 32px 16px 48px; }
       .nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .preview-inner { flex-direction: column; }
+      .preview-img { max-width: 100%; }
     }
   </style>
 </head>
@@ -756,44 +837,56 @@
           </ul>
         </div>
 
+        <!-- imgbb API Key 配置（核心功能，非可选） -->
+        <div class="imgbb-setup" id="imgbbSetupBox">
+          <div class="setup-header">
+            <span class="setup-title">🔑 一键搜图配置</span>
+            <span class="setup-status off" id="imgbbStatus">未配置</span>
+          </div>
+          <div class="setup-desc" id="imgbbDesc">
+            配置免费 API Key 后，上传图片自动获取公网链接，<strong>一键同时打开6大搜图平台的搜索结果</strong>，无需逐个手动贴图。<a href="https://api.imgbb.com/" target="_blank">1分钟免费注册获取 →</a>
+          </div>
+          <div class="input-row">
+            <input type="text" id="imgbbKeyInput" placeholder="粘贴你的 imgbb API Key">
+            <button class="btn-primary" onclick="saveImgbbKey()">保存</button>
+          </div>
+        </div>
+
         <!-- Upload -->
         <div class="upload-zone" id="uploadArea" onclick="document.getElementById('fileInput').click()">
           <div class="uz-icon">↑</div>
           <p>点击上传包装图片或拖拽到此处</p>
-          <p class="uz-hint">支持 JPG / PNG / WebP，最大 10MB → 本地预览后一键打开搜图页面</p>
+          <p class="uz-hint">支持 JPG / PNG / WebP，最大 10MB</p>
           <input type="file" id="fileInput" accept="image/*">
         </div>
 
-        <div class="or-line">或直接粘贴图片 URL</div>
+        <div class="or-line">或直接粘贴图片公网 URL</div>
         <div class="input-row">
           <input type="text" id="imageUrlInput" placeholder="https://example.com/packaging.jpg">
           <button class="btn-primary" onclick="useImageUrl()">使用此 URL</button>
         </div>
 
-        <div style="margin-top:16px;padding:12px 16px;background:rgba(45,125,210,0.06);border:1px solid rgba(45,125,210,0.15);border-radius:8px;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-            <span style="font-size:13px;font-weight:500;color:#2d7dd2;">🔑 增强模式：imgbb API Key</span>
-            <span id="imgbbStatus" style="font-size:11px;padding:2px 8px;border-radius:4px;"></span>
-          </div>
-          <p style="font-size:12px;color:#888;margin:0 0 8px 0;">填入免费 API Key 后，图片自动上传至 imgbb 获取永久公网链接，搜图按钮可直接跳转搜索结果页。<a href="https://api.imgbb.com/" target="_blank" style="color:#2d7dd2;">免费注册获取 →</a></p>
-          <div class="input-row">
-            <input type="text" id="imgbbKeyInput" placeholder="粘贴你的 imgbb API Key" style="font-size:12px;">
-            <button class="btn-primary" onclick="saveImgbbKey()" style="font-size:12px;padding:6px 14px;">保存</button>
-          </div>
+        <!-- Loading -->
+        <div class="loading" id="uploadLoading">
+          <div class="spinner"></div>
+          <span>正在上传图片到 imgbb...</span>
         </div>
 
         <!-- Preview -->
         <div class="preview-wrap" id="previewContainer">
-          <hr class="hr">
-          <img id="previewImg" class="preview-img" alt="Preview">
-          <div class="preview-url" id="previewUrl"></div>
+          <div class="preview-inner">
+            <img id="previewImg" class="preview-img" alt="Preview">
+            <div class="preview-info">
+              <div class="pi-label">图片状态</div>
+              <div id="previewStatus"></div>
+            </div>
+          </div>
         </div>
 
-        <!-- Loading -->
-        <div class="loading" id="uploadLoading">
-          <div class="spinner"></div>
-          <span>正在上传图片到图床...</span>
-        </div>
+        <!-- 一键全网搜图 -->
+        <button class="btn-search-all disabled" id="btnSearchAll" onclick="searchAllEngines()">
+          ⚡ 一键全网搜图（同时打开6个平台）
+        </button>
 
         <div class="sub-label">搜图平台</div>
         <div class="link-grid" id="imageSearchGrid">
@@ -1238,21 +1331,20 @@ function switchTab(tab) {
   document.querySelectorAll('.tabbar-btn').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + tab).style.display = 'block';
-  // Update tabbar buttons
   const tabMap = { step1:0, step4:1, step2:2, step3:3, checklist:4, evidence:5 };
   const tbBtns = document.querySelectorAll('.tabbar-btn');
   if (tbBtns[tabMap[tab]]) tbBtns[tabMap[tab]].classList.add('active');
-  // Update nav links
   const navBtns = document.querySelectorAll('.nav-link');
   const navMap = { step1:0, step4:1, step2:2, step3:3, checklist:4, evidence:5 };
   if (navBtns[navMap[tab]]) navBtns[navMap[tab]].classList.add('active');
-  // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ============ Image Upload ============
-let currentImageUrl = '';
+// ============ State ============
+let currentImageUrl = '';  // 公网URL（imgbb或用户粘贴的）
+let localPreviewUrl = '';  // 本地data URL（仅预览用）
 
+// ============ Image Upload ============
 const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
 
@@ -1284,11 +1376,19 @@ async function uploadImage(file) {
   }
 
   const loading = document.getElementById('uploadLoading');
-  loading.classList.add('active');
-
-  // 方案1：如果有 imgbb API key，优先使用（支持 CORS，永久链接）
   const imgbbKey = localStorage.getItem('imgbb_api_key');
+
+  // 先生成本地预览（100%可靠，用户能立即看到图片）
+  try {
+    localPreviewUrl = await readFileAsDataUrl(file);
+  } catch (err) {
+    showToast('图片读取失败');
+    return;
+  }
+
+  // 如果有 imgbb key，上传获取公网URL
   if (imgbbKey) {
+    loading.classList.add('active');
     try {
       const base64 = await readFileAsBase64(file);
       const formData = new FormData();
@@ -1305,41 +1405,32 @@ async function uploadImage(file) {
         const data = await res.json();
         if (data.success && data.data && data.data.url) {
           currentImageUrl = data.data.url;
-          showPreview(data.data.url, file.name);
+          showPreview(localPreviewUrl, 'public', data.data.url);
           enableImageSearchButtons(data.data.url);
-          showToast('图片上传成功（imgbb 永久链接）');
+          showToast('上传成功！点击「一键全网搜图」即可同时搜索6个平台');
           loading.classList.remove('active');
           return;
         }
       }
-      throw new Error('imgbb 返回异常');
+      // imgbb 失败，提示
+      showToast('imgbb 上传失败，请检查 API Key 是否正确');
     } catch (err) {
       console.warn('imgbb 上传失败:', err.message);
+      showToast('imgbb 上传失败：' + (err.message || '网络错误'));
     }
-  }
-
-  // 方案2：本地预览 + 搜索引擎直接打开（零依赖，100%可靠）
-  try {
-    const dataUrl = await readFileAsDataUrl(file);
-    currentImageUrl = dataUrl;
-    showPreview(dataUrl, file.name);
-    enableDirectSearchButtons();
-    showToast('图片已加载 ✓ 点击搜图按钮直接打开搜索页');
     loading.classList.remove('active');
-    return;
-  } catch (err) {
-    console.error('本地预览失败:', err);
+  } else {
+    // 没有 imgbb key，显示本地预览 + 引导配置
+    currentImageUrl = '';
+    showPreview(localPreviewUrl, 'local', '');
+    showToast('请先配置 imgbb API Key 以启用一键搜图');
   }
-
-  loading.classList.remove('active');
-  showToast('加载失败，请直接粘贴图片公网 URL');
 }
 
 function readFileAsBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
-      // 去掉 data:image/xxx;base64, 前缀
       const base64 = reader.result.split(',')[1];
       resolve(base64);
     };
@@ -1357,27 +1448,34 @@ function readFileAsDataUrl(file) {
   });
 }
 
-// 没有公网URL时的搜图方式：直接打开搜索页首页
-function enableDirectSearchButtons() {
-  const btns = {
-    'btn-google-lens': 'https://lens.google.com/',
-    'btn-tineye': 'https://tineye.com/',
-    'btn-yandex': 'https://yandex.com/images/',
-    'btn-baidu': 'https://graph.baidu.com/pcpage/pcsearch',
-    'btn-bing': 'https://www.bing.com/images/search?q=&view=detailv2&iss=sbi',
-    'btn-sogou': 'https://pic.sogou.com/',
-  };
+// 显示预览
+function showPreview(previewSrc, type, publicUrl) {
+  const container = document.getElementById('previewContainer');
+  const img = document.getElementById('previewImg');
+  const statusDiv = document.getElementById('previewStatus');
 
-  Object.entries(btns).forEach(([id, href]) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.href = href;
-      el.classList.remove('disabled');
-      el.target = '_blank';
-    }
-  });
+  img.src = previewSrc;
+
+  if (type === 'public') {
+    // 有公网URL = 可以一键搜图
+    statusDiv.innerHTML = `
+      <div class="pi-url">✓ 已获取公网链接 <a href="${publicUrl}" target="_blank">${publicUrl}</a></div>
+      <div style="font-size:0.76rem;color:var(--success);margin-top:4px;">点击下方「一键全网搜图」按钮即可同时搜索所有平台</div>
+    `;
+    document.getElementById('btnSearchAll').classList.remove('disabled');
+  } else {
+    // 仅本地预览 = 需要配置API Key
+    statusDiv.innerHTML = `
+      <div class="pi-local">⚠ 仅本地预览，无法自动搜图</div>
+      <div style="font-size:0.76rem;color:var(--text3);margin-top:4px;">请配置上方 imgbb API Key，上传后即可一键全网搜图</div>
+    `;
+    document.getElementById('btnSearchAll').classList.add('disabled');
+  }
+
+  container.classList.add('active');
 }
 
+// 使用用户粘贴的URL
 function useImageUrl() {
   const url = document.getElementById('imageUrlInput').value.trim();
   if (!url) {
@@ -1385,59 +1483,45 @@ function useImageUrl() {
     return;
   }
   if (!url.startsWith('http')) {
-    showToast('请输入有效的图片 URL');
+    showToast('请输入有效的图片 URL（以 http 开头）');
     return;
   }
   currentImageUrl = url;
-  showPreview(url, '用户提供的 URL');
+  localPreviewUrl = url;
+  showPreview(url, 'public', url);
   enableImageSearchButtons(url);
-  showToast('图片 URL 已设置，搜图按钮可直接跳转');
+  showToast('URL 已设置！点击「一键全网搜图」即可同时搜索6个平台');
 }
 
-// ============ imgbb API Key 管理 ============
-function saveImgbbKey() {
-  const key = document.getElementById('imgbbKeyInput').value.trim();
-  if (!key) {
-    localStorage.removeItem('imgbb_api_key');
-    updateImgbbStatus(false);
-    showToast('API Key 已清除');
+// ============ 一键全网搜图 ============
+function searchAllEngines() {
+  if (!currentImageUrl) {
+    showToast('请先上传图片获取公网链接');
     return;
   }
-  localStorage.setItem('imgbb_api_key', key);
-  updateImgbbStatus(true);
-  showToast('API Key 已保存 ✓ 下次上传图片将自动使用 imgbb');
+
+  const encodedUrl = encodeURIComponent(currentImageUrl);
+  const urls = [
+    `https://lens.google.com/uploadbyurl?url=${encodedUrl}`,
+    `https://tineye.com/search/?url=${encodedUrl}`,
+    `https://yandex.com/images/search?rpt=imageview&url=${encodedUrl}`,
+    `https://graph.baidu.com/pcpage/pcsearch?image=${encodedUrl}`,
+    `https://www.bing.com/images/search?q=imgurl:${encodedUrl}&view=detailv2&iss=sbi`,
+    `https://pic.sogou.com/ris?query=${encodedUrl}&flag=1&drag=0`,
+  ];
+
+  const names = ['Google Lens', 'TinEye', 'Yandex', '百度识图', 'Bing', '搜狗'];
+
+  urls.forEach((url, i) => {
+    setTimeout(() => {
+      window.open(url, '_blank');
+    }, i * 300);  // 间隔300ms避免浏览器拦截
+  });
+
+  showToast(`正在打开 ${names.length} 个搜图平台...`);
 }
 
-function updateImgbbStatus(hasKey) {
-  const el = document.getElementById('imgbbStatus');
-  if (hasKey) {
-    el.textContent = '已配置';
-    el.style.background = 'rgba(45,125,210,0.15)';
-    el.style.color = '#2d7dd2';
-  } else {
-    el.textContent = '未配置';
-    el.style.background = 'rgba(255,255,255,0.08)';
-    el.style.color = '#888';
-  }
-}
-
-// 页面加载时恢复 imgbb key 状态
-(function() {
-  const key = localStorage.getItem('imgbb_api_key');
-  updateImgbbStatus(!!key);
-  if (key) document.getElementById('imgbbKeyInput').value = key;
-})();
-
-function showPreview(url, name) {
-  const container = document.getElementById('previewContainer');
-  const img = document.getElementById('previewImg');
-  const urlDiv = document.getElementById('previewUrl');
-
-  img.src = url;
-  urlDiv.innerHTML = `图片 URL: <a href="${url}" target="_blank">${url}</a>`;
-  container.classList.add('active');
-}
-
+// 启用单个搜图按钮（有公网URL时）
 function enableImageSearchButtons(url) {
   const encodedUrl = encodeURIComponent(url);
 
@@ -1457,18 +1541,50 @@ function enableImageSearchButtons(url) {
       el.classList.remove('disabled');
     }
   });
+
+  document.getElementById('btnSearchAll').classList.remove('disabled');
 }
+
+// ============ imgbb API Key 管理 ============
+function saveImgbbKey() {
+  const key = document.getElementById('imgbbKeyInput').value.trim();
+  if (!key) {
+    localStorage.removeItem('imgbb_api_key');
+    updateImgbbStatus(false);
+    showToast('API Key 已清除');
+    return;
+  }
+  localStorage.setItem('imgbb_api_key', key);
+  updateImgbbStatus(true);
+  showToast('API Key 已保存 ✓ 下次上传图片将自动上传到 imgbb 获取公网链接');
+}
+
+function updateImgbbStatus(hasKey) {
+  const statusEl = document.getElementById('imgbbStatus');
+  const setupBox = document.getElementById('imgbbSetupBox');
+  const descEl = document.getElementById('imgbbDesc');
+
+  if (hasKey) {
+    statusEl.textContent = '✓ 已配置';
+    statusEl.className = 'setup-status on';
+    setupBox.classList.add('configured');
+    descEl.innerHTML = 'API Key 已配置，上传图片将自动获取公网链接并启用<strong>一键全网搜图</strong>。<a href="https://api.imgbb.com/" target="_blank">管理 API Key →</a>';
+  } else {
+    statusEl.textContent = '未配置';
+    statusEl.className = 'setup-status off';
+    setupBox.classList.remove('configured');
+    descEl.innerHTML = '配置免费 API Key 后，上传图片自动获取公网链接，<strong>一键同时打开6大搜图平台的搜索结果</strong>，无需逐个手动贴图。<a href="https://api.imgbb.com/" target="_blank">1分钟免费注册获取 →</a>';
+  }
+}
+
+// 页面加载时恢复 imgbb key 状态
+(function() {
+  const key = localStorage.getItem('imgbb_api_key');
+  updateImgbbStatus(!!key);
+  if (key) document.getElementById('imgbbKeyInput').value = key;
+})();
 
 // ============ Keyword Search Links ============
-function updateKeywordLinks() {
-  const keyword = document.getElementById('keywordInput').value.trim();
-  if (!keyword) return;
-  const encoded = encodeURIComponent(keyword);
-
-  document.getElementById('btn-google-patents').href = `https://patents.google.com/?q=${encoded}`;
-  document.getElementById('btn-wipo').href = `https://www.wipo.int/designdb/index.jsp?search=${encoded}`;
-}
-
 function updateTmLinks() {
   const keyword = document.getElementById('keywordInputTm').value.trim();
   if (!keyword) return;
@@ -1488,12 +1604,10 @@ function updateProgress() {
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressText').textContent = `${checked} / ${total} 已完成 (${pct}%)`;
 
-  // Save to localStorage
   const state = [...checks].map(c => c.checked);
   localStorage.setItem('packaging-check-list', JSON.stringify(state));
 }
 
-// Load saved state
 function loadChecklistState() {
   try {
     const saved = JSON.parse(localStorage.getItem('packaging-check-list'));
