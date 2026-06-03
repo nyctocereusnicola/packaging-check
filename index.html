@@ -915,62 +915,62 @@
         </div>
 
         <!-- 一键全网搜图 -->
-        <button class="btn-search-all disabled" id="btnSearchAll" onclick="searchAllEngines()">
+        <button class="btn-search-all" id="btnSearchAll" onclick="searchAllEngines()">
           ⚡ 一键全网搜图（同时打开8个平台）
         </button>
 
         <div class="sub-label">搜图平台</div>
         <div class="link-grid" id="imageSearchGrid">
-          <a class="link-card disabled" id="btn-google-lens" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-google-lens" target="_blank" rel="noopener" href="https://lens.google.com/">
             <span class="lc-icon">GL</span>
             <div class="lc-text">
               <div class="lc-name">Google Lens <span class="key-badge free">免费</span></div>
               <div class="lc-desc">全球最强图像识别</div>
             </div>
           </a>
-          <a class="link-card disabled" id="btn-tineye" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-tineye" target="_blank" rel="noopener" href="https://tineye.com/">
             <span class="lc-icon">TE</span>
             <div class="lc-text">
               <div class="lc-name">TinEye <span class="key-badge free">免费</span></div>
               <div class="lc-desc">图片溯源追踪</div>
             </div>
           </a>
-          <a class="link-card disabled" id="btn-yandex" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-yandex" target="_blank" rel="noopener" href="https://yandex.com/images/">
             <span class="lc-icon">YX</span>
             <div class="lc-text">
               <div class="lc-name">Yandex 图片 <span class="key-badge free">免费</span></div>
               <div class="lc-desc">相似图识别能力极强</div>
             </div>
           </a>
-          <a class="link-card disabled" id="btn-baidu" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-baidu" target="_blank" rel="noopener" href="https://graph.baidu.com/">
             <span class="lc-icon">BD</span>
             <div class="lc-text">
               <div class="lc-name">百度识图 <span class="key-badge free">免费</span></div>
               <div class="lc-desc">国内电商+全网覆盖</div>
             </div>
           </a>
-          <a class="link-card disabled" id="btn-bing" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-bing" target="_blank" rel="noopener" href="https://www.bing.com/visualsearch">
             <span class="lc-icon">BG</span>
             <div class="lc-text">
               <div class="lc-name">Bing 视觉搜索 <span class="key-badge free">免费</span></div>
               <div class="lc-desc">微软图搜，覆盖欧美</div>
             </div>
           </a>
-          <a class="link-card disabled" id="btn-sogou" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-sogou" target="_blank" rel="noopener" href="https://pic.sogou.com/">
             <span class="lc-icon">SG</span>
             <div class="lc-text">
               <div class="lc-name">搜狗识图 <span class="key-badge free">免费</span></div>
               <div class="lc-desc">微信生态+国内图片</div>
             </div>
           </a>
-          <a class="link-card disabled" id="btn-xiaohongshu" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-xiaohongshu" target="_blank" rel="noopener" href="https://www.xiaohongshu.com/">
             <span class="lc-icon">XH</span>
             <div class="lc-text">
               <div class="lc-name">小红书 <span class="key-badge free">免费</span></div>
               <div class="lc-desc">搜索框相机图标搜同款</div>
             </div>
           </a>
-          <a class="link-card disabled" id="btn-douyin" target="_blank" rel="noopener">
+          <a class="link-card" id="btn-douyin" target="_blank" rel="noopener" href="https://www.douyin.com/">
             <span class="lc-icon">DY</span>
             <div class="lc-text">
               <div class="lc-name">抖音 <span class="key-badge free">免费</span></div>
@@ -1620,19 +1620,17 @@ function showPreview(previewSrc, type, publicUrl) {
   img.src = previewSrc;
 
   if (type === 'public') {
-    // 有公网URL = 可以一键搜图
+    // 有公网URL = 链接升级为带图搜索
     statusDiv.innerHTML = `
       <div class="pi-url">✓ 已获取公网链接 <a href="${publicUrl}" target="_blank">${publicUrl}</a></div>
-      <div style="font-size:0.76rem;color:var(--success);margin-top:4px;">点击下方「一键全网搜图」按钮即可同时搜索所有平台</div>
+      <div style="font-size:0.76rem;color:var(--success);margin-top:4px;">搜图链接已自动升级为带图搜索，点击即可直接出结果</div>
     `;
-    document.getElementById('btnSearchAll').classList.remove('disabled');
   } else {
-    // 仅本地预览 = 跳转到各平台搜图上传页
+    // 仅本地预览 = 按钮保持默认（跳转搜图上传页）
     statusDiv.innerHTML = `
-      <div class="pi-local">📷 仅本地预览，点击下方按钮跳转到各平台上传图片搜索</div>
-      <div style="font-size:0.76rem;color:var(--text3);margin-top:4px;">配置 imgbb API Key 可实现一键自动搜图，无需逐个手动上传</div>
+      <div class="pi-local">📷 仅本地预览，下方按钮已可点击跳转各平台搜图</div>
+      <div style="font-size:0.76rem;color:var(--text3);margin-top:4px;">配置 imgbb API Key 后，上传图片可自动升级为带图URL搜图</div>
     `;
-    enableUploadPageButtons();
   }
 
   container.classList.add('active');
@@ -1678,7 +1676,7 @@ function searchAllEngines() {
     setTimeout(() => window.open('https://www.douyin.com/', '_blank'), (urls.length + 1) * 300);
     showToast(`正在打开 ${names.length + 2} 个平台...`);
   } else {
-    // 无公网URL：跳转到各平台上传页/搜索页
+    // 无公网URL：跳转到各平台搜图上传页
     const uploadPages = [
       { url: 'https://lens.google.com/', name: 'Google Lens' },
       { url: 'https://tineye.com/', name: 'TinEye' },
@@ -1696,7 +1694,7 @@ function searchAllEngines() {
   }
 }
 
-// 启用单个搜图按钮（有公网URL时）
+// 启用单个搜图按钮（有公网URL时——升级链接为带图搜索）
 function enableImageSearchButtons(url) {
   const encodedUrl = encodeURIComponent(url);
 
@@ -1715,15 +1713,12 @@ function enableImageSearchButtons(url) {
     const el = document.getElementById(id);
     if (el) {
       el.href = href;
-      el.classList.remove('disabled');
     }
   });
-
-  document.getElementById('btnSearchAll').classList.remove('disabled');
 }
 
-// 启用搜图按钮（无公网URL时，跳转到各平台的上传页面）
-function enableUploadPageButtons() {
+// 重置搜图按钮为默认（各平台搜图上传页）
+function resetSearchButtons() {
   const uploadPages = {
     'btn-google-lens': 'https://lens.google.com/',
     'btn-tineye': 'https://tineye.com/',
@@ -1739,12 +1734,8 @@ function enableUploadPageButtons() {
     const el = document.getElementById(id);
     if (el) {
       el.href = href;
-      el.classList.remove('disabled');
     }
   });
-
-  // 一键全网搜图：打开所有平台上传页
-  document.getElementById('btnSearchAll').classList.remove('disabled');
 }
 
 // ============ imgbb API Key 管理 ============
