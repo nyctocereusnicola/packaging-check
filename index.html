@@ -5,914 +5,1201 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>包装原创性检测 | Packaging Originality Check</title>
   <meta name="description" content="免费在线包装设计原创性检测工具：以图搜图、专利检索、商标查询、版权比对，一键跳转各大公开检索平台">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◈</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #242836;
-      --border: #2e3348;
-      --text: #e8eaf0;
-      --text2: #9ca3b8;
-      --text3: #6b7394;
-      --accent: #6c5ce7;
-      --accent2: #a29bfe;
-      --green: #00cec9;
-      --orange: #fdcb6e;
-      --red: #ff6b6b;
-      --blue: #74b9ff;
-      --radius: 12px;
+      --bg: #08090b;
+      --bg2: #0e1013;
+      --surface: #141518;
+      --surface2: #1a1b1f;
+      --surface3: #212226;
+      --border: rgba(255,255,255,0.06);
+      --border2: rgba(255,255,255,0.10);
+      --border3: rgba(255,255,255,0.04);
+      --text: #f2f2f3;
+      --text2: #8c8d96;
+      --text3: #55565e;
+      --navy: #0d2b4e;
+      --navy2: #143d6b;
+      --navy3: #1a4f88;
+      --navy4: #1f5fa0;
+      --accent: #2d7dd2;
+      --accent2: #4a9ae8;
+      --accent-glow: rgba(45,125,210,0.10);
+      --accent-glow2: rgba(45,125,210,0.05);
+      --warn: #c49a3c;
+      --danger: #c04848;
+      --success: #3daa6a;
+      --radius: 10px;
+      --radius2: 14px;
+      --font: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
     }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-family: var(--font);
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Header */
-    .header {
-      text-align: center;
-      padding: 48px 20px 32px;
-      background: linear-gradient(135deg, rgba(108,92,231,0.15), rgba(0,206,201,0.1));
+    ::selection { background: var(--navy3); color: #fff; }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,9,11,0.85);
+      backdrop-filter: blur(20px) saturate(1.2);
+      -webkit-backdrop-filter: blur(20px) saturate(1.2);
       border-bottom: 1px solid var(--border);
     }
-    .header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, var(--accent2), var(--green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .nav-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 56px;
     }
-    .header p { color: var(--text2); font-size: 0.95rem; max-width: 680px; margin: 0 auto; }
-    .header .subtitle { font-size: 0.85rem; margin-top: 8px; color: var(--text3); }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 600; font-size: 0.88rem; letter-spacing: -0.01em;
+      color: var(--text); text-decoration: none;
+    }
+    .nav-brand .logo-mark {
+      width: 28px; height: 28px;
+      border: 1.5px solid var(--accent);
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--accent);
+      background: var(--accent-glow2);
+    }
+    .nav-links { display: flex; gap: 2px; }
+    .nav-link {
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text3);
+      cursor: pointer;
+      transition: all 0.15s var(--ease);
+      border: none; background: none;
+      font-family: var(--font);
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text2); background: var(--surface); }
+    .nav-link.active {
+      color: var(--text);
+      background: var(--surface2);
+    }
 
-    /* Container */
-    .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
-
-    /* Section */
-    .section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
+    /* ===== HERO ===== */
+    .hero {
+      padding: 72px 28px 48px;
+      text-align: center;
+      position: relative;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--border2), transparent);
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 14px 5px 8px;
+      background: var(--accent-glow2);
+      border: 1px solid rgba(45,125,210,0.12);
+      border-radius: 20px;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--accent2);
+      letter-spacing: 0.02em;
       margin-bottom: 24px;
     }
-    .section-title {
-      font-size: 1.25rem;
+    .hero-tag .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+    }
+    .hero h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent2), var(--navy4));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .sub {
+      color: var(--text2);
+      font-size: 0.95rem;
+      font-weight: 300;
+      max-width: 480px;
+      margin: 0 auto;
+      letter-spacing: 0.005em;
+      line-height: 1.7;
+    }
+    .hero-methods {
+      display: flex; justify-content: center; gap: 32px;
+      margin-top: 32px; padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+    .hero-methods span {
+      font-size: 0.76rem; font-weight: 500;
+      color: var(--text3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .hero-methods span b {
+      color: var(--text2);
       font-weight: 600;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
     }
-    .section-title .icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; flex-shrink: 0;
-    }
-    .icon-purple { background: rgba(108,92,231,0.2); }
-    .icon-green { background: rgba(0,206,201,0.2); }
-    .icon-orange { background: rgba(253,203,110,0.2); }
-    .icon-red { background: rgba(255,107,107,0.2); }
-    .icon-blue { background: rgba(116,185,255,0.2); }
 
-    /* Step Badge */
+    /* ===== CONTAINER ===== */
+    .container { max-width: 1080px; margin: 0 auto; padding: 48px 28px 64px; }
+
+    /* ===== TAB BAR ===== */
+    .tabbar {
+      display: flex; gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 4px;
+      margin-bottom: 36px;
+    }
+    .tabbar-btn {
+      flex: 1;
+      padding: 11px 8px;
+      background: transparent;
+      border: none;
+      color: var(--text3);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 9px;
+      transition: all 0.2s var(--ease);
+      white-space: nowrap;
+      font-family: var(--font);
+      letter-spacing: -0.01em;
+    }
+    .tabbar-btn.active {
+      background: var(--navy);
+      color: #e8eef6;
+      box-shadow: 0 1px 8px rgba(13,43,78,0.4);
+    }
+    .tabbar-btn:hover:not(.active) { color: var(--text2); background: var(--surface2); }
+
+    /* ===== SECTION ===== */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 28px 32px 0;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .panel-body { padding: 24px 32px 32px; }
     .step-badge {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      font-size: 0.78rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-badge.s1 { background: var(--danger); color: #fff; }
+    .step-badge.s2 { background: var(--accent); color: #fff; }
+    .step-badge.s3 { background: var(--warn); color: #1a1a1a; }
+    .step-badge.s4 { background: var(--success); color: #fff; }
+    .panel-title {
+      font-size: 1.15rem; font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .key-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .key-badge.critical { background: rgba(192,72,72,0.12); color: var(--danger); }
+    .key-badge.free { background: rgba(61,170,106,0.10); color: var(--success); }
+    .key-badge.paid { background: rgba(196,154,60,0.10); color: var(--warn); }
+
+    /* ===== INFO STRIP ===== */
+    .info-strip {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .info-strip.accent-l { border-left: 2px solid var(--accent); }
+    .info-strip.danger-l { border-left: 2px solid var(--danger); }
+    .info-strip.warn-l { border-left: 2px solid var(--warn); }
+    .info-strip.success-l { border-left: 2px solid var(--success); }
+
+    .info-strip h4 {
+      font-size: 0.82rem; font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: 0.01em;
+    }
+    .info-strip p, .info-strip li {
+      font-size: 0.82rem; color: var(--text2); line-height: 1.8;
+    }
+    .info-strip ol, .info-strip ul { padding-left: 20px; }
+    .info-strip li { margin-bottom: 2px; }
+    .info-strip strong { color: var(--text); font-weight: 500; }
+    .info-strip .hl { color: var(--accent); font-weight: 500; }
+    .info-strip .danger { color: var(--danger); font-weight: 500; }
+
+    /* ===== SUB-SECTION ===== */
+    .sub-label {
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 28px 0 14px;
+    }
+
+    /* ===== SEARCH BUTTONS ===== */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
+    }
+    .link-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border3);
+      border-radius: var(--radius);
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      font-size: 0.86rem;
+    }
+    .link-card:hover {
+      border-color: var(--navy2);
+      background: var(--accent-glow2);
+      transform: translateY(-1px);
+    }
+    .link-card.disabled { opacity: 0.3; pointer-events: none; }
+    .link-card .lc-icon {
+      width: 34px; height: 34px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700;
+      flex-shrink: 0;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      letter-spacing: 0.02em;
+    }
+    .link-card .lc-text { flex: 1; min-width: 0; }
+    .link-card .lc-name { font-weight: 500; font-size: 0.86rem; }
+    .link-card .lc-desc { font-size: 0.72rem; color: var(--text3); margin-top: 2px; }
+
+    /* ===== UPLOAD ===== */
+    .upload-zone {
+      border: 1.5px dashed var(--border2);
+      border-radius: var(--radius2);
+      padding: 52px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s var(--ease);
+      background: var(--bg2);
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-glow2);
+    }
+    .upload-zone .uz-icon {
+      width: 52px; height: 52px;
+      border: 1px solid var(--border2);
+      border-radius: 12px;
       display: inline-flex; align-items: center; justify-content: center;
-      width: 28px; height: 28px; border-radius: 50%;
-      font-size: 0.82rem; font-weight: 700; flex-shrink: 0;
+      margin-bottom: 16px;
+      color: var(--accent);
+      font-size: 1.3rem;
+      background: var(--surface2);
     }
-    .step-1 { background: rgba(255,107,107,0.2); color: var(--red); }
-    .step-2 { background: rgba(116,185,255,0.2); color: var(--blue); }
-    .step-3 { background: rgba(253,203,110,0.2); color: var(--orange); }
-    .step-4 { background: rgba(0,206,201,0.2); color: var(--green); }
+    .upload-zone p { color: var(--text2); font-size: 0.9rem; font-weight: 400; }
+    .upload-zone .uz-hint { font-size: 0.76rem; color: var(--text3); margin-top: 8px; }
+    .upload-zone input[type="file"] { display: none; }
 
-    /* Upload Area */
-    .upload-area {
-      border: 2px dashed var(--border); border-radius: var(--radius);
-      padding: 40px 20px; text-align: center; cursor: pointer;
-      transition: all 0.3s; background: var(--surface2); position: relative;
+    /* ===== PREVIEW ===== */
+    .preview-wrap { display: none; margin-top: 20px; }
+    .preview-wrap.active { display: block; }
+    .preview-img {
+      max-width: 260px; max-height: 180px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
     }
-    .upload-area:hover, .upload-area.dragover {
-      border-color: var(--accent); background: rgba(108,92,231,0.08);
+    .preview-url {
+      margin-top: 10px; font-size: 0.76rem;
+      color: var(--accent2); word-break: break-all;
     }
-    .upload-area .upload-icon { font-size: 2.5rem; margin-bottom: 12px; }
-    .upload-area p { color: var(--text2); font-size: 0.9rem; }
-    .upload-area .hint { font-size: 0.8rem; color: var(--text3); margin-top: 8px; }
-    .upload-area input[type="file"] { display: none; }
-
-    /* Image Preview */
-    .preview-container { display: none; margin-top: 16px; position: relative; }
-    .preview-container.active { display: block; }
-    .preview-img { max-width: 280px; max-height: 200px; border-radius: 8px; border: 1px solid var(--border); }
-    .preview-url { margin-top: 8px; font-size: 0.8rem; color: var(--green); word-break: break-all; }
-    .preview-url a { color: var(--green); text-decoration: none; }
+    .preview-url a { color: var(--accent2); text-decoration: none; }
     .preview-url a:hover { text-decoration: underline; }
 
-    /* URL Input */
-    .url-input-group { display: flex; gap: 10px; margin-top: 16px; }
-    .url-input-group input {
-      flex: 1; padding: 10px 14px; background: var(--surface2);
-      border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; outline: none;
+    /* ===== INPUT GROUP ===== */
+    .input-row { display: flex; gap: 8px; }
+    .input-row input {
+      flex: 1;
+      padding: 11px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.15s;
     }
-    .url-input-group input:focus { border-color: var(--accent); }
-    .url-input-group button {
-      padding: 10px 20px; background: var(--accent); color: white;
-      border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; white-space: nowrap;
+    .input-row input:focus { border-color: var(--accent); }
+    .input-row input::placeholder { color: var(--text3); }
+    .btn-primary {
+      padding: 11px 22px;
+      background: var(--navy);
+      color: #d0ddef;
+      border: 1px solid var(--navy2);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.84rem; font-weight: 500;
+      font-family: var(--font);
+      transition: all 0.15s var(--ease);
+      white-space: nowrap;
     }
-    .url-input-group button:hover { background: var(--accent2); }
+    .btn-primary:hover { background: var(--navy2); border-color: var(--navy3); }
 
-    /* Search Buttons Grid */
-    .search-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px; margin-top: 16px;
+    /* ===== DIVIDER ===== */
+    .hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .or-line {
+      text-align: center; color: var(--text3);
+      font-size: 0.76rem; margin: 16px 0;
+      display: flex; align-items: center; gap: 14px;
     }
-    .search-btn {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 16px; background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; color: var(--text); text-decoration: none;
-      cursor: pointer; transition: all 0.25s; font-size: 0.9rem;
-    }
-    .search-btn:hover {
-      border-color: var(--accent); background: rgba(108,92,231,0.1); transform: translateY(-2px);
-    }
-    .search-btn.disabled { opacity: 0.4; pointer-events: none; }
-    .search-btn .btn-icon { font-size: 1.3rem; flex-shrink: 0; }
-    .search-btn .btn-label { font-weight: 500; }
-    .search-btn .btn-desc { font-size: 0.75rem; color: var(--text2); }
-
-    /* Keyword Input */
-    .keyword-group { display: flex; gap: 10px; }
-    .keyword-group input {
-      flex: 1; padding: 12px 16px; background: var(--surface2);
-      border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; outline: none;
-    }
-    .keyword-group input:focus { border-color: var(--accent); }
-
-    /* Info Box */
-    .info-box {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 18px 20px; margin-top: 16px;
-    }
-    .info-box h4 { font-size: 0.92rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-    .info-box p, .info-box li { font-size: 0.85rem; color: var(--text2); line-height: 1.7; }
-    .info-box ul { padding-left: 18px; margin-top: 6px; }
-    .info-box li { margin-bottom: 4px; }
-    .info-box strong { color: var(--text); }
-    .info-box .highlight { color: var(--orange); font-weight: 500; }
-    .info-box .key-point { color: var(--red); font-weight: 500; }
-
-    .info-box-red { border-left: 3px solid var(--red); }
-    .info-box-blue { border-left: 3px solid var(--blue); }
-    .info-box-orange { border-left: 3px solid var(--orange); }
-    .info-box-green { border-left: 3px solid var(--green); }
-
-    /* Sub-section heading */
-    .sub-heading {
-      font-size: 0.95rem; font-weight: 600; margin-top: 20px; margin-bottom: 10px;
-      display: flex; align-items: center; gap: 8px; color: var(--text);
+    .or-line::before, .or-line::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--border);
     }
 
-    /* Checklist */
-    .checklist { list-style: none; }
-    .checklist li {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 12px 0; border-bottom: 1px solid rgba(46,51,72,0.5);
+    /* ===== WARNING ===== */
+    .warn-strip {
+      background: rgba(192,72,72,0.04);
+      border: 1px solid rgba(192,72,72,0.12);
+      border-left: 2px solid var(--danger);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-top: 20px;
     }
-    .checklist li:last-child { border-bottom: none; }
-    .checklist input[type="checkbox"] {
-      width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0;
-    }
-    .checklist .check-label { font-size: 0.92rem; }
-    .checklist .check-desc { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
-    .checklist .check-link { color: var(--green); text-decoration: none; font-size: 0.8rem; }
-    .checklist .check-link:hover { text-decoration: underline; }
+    .warn-strip p { font-size: 0.82rem; color: var(--danger); line-height: 1.75; opacity: 0.9; }
+    .warn-strip .wt { font-weight: 600; margin-bottom: 4px; opacity: 1; }
 
-    /* Progress */
-    .progress-bar { background: var(--surface2); border-radius: 20px; height: 8px; margin-top: 16px; overflow: hidden; }
-    .progress-fill {
-      height: 100%; background: linear-gradient(90deg, var(--accent), var(--green));
-      border-radius: 20px; transition: width 0.5s ease; width: 0%;
+    /* ===== CHECKLIST ===== */
+    .cl-list { list-style: none; }
+    .cl-list li {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .progress-text { font-size: 0.8rem; color: var(--text2); margin-top: 6px; text-align: right; }
+    .cl-list li:last-child { border-bottom: none; }
+    .cl-list input[type="checkbox"] {
+      width: 18px; height: 18px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .cl-list .cl-label { font-size: 0.9rem; font-weight: 500; }
+    .cl-list .cl-desc { font-size: 0.78rem; color: var(--text2); margin-top: 4px; line-height: 1.7; }
+    .cl-list .cl-link {
+      color: var(--accent2); text-decoration: none;
+      font-size: 0.76rem; display: inline-block; margin-top: 6px;
+    }
+    .cl-list .cl-link:hover { text-decoration: underline; }
 
-    /* Evidence Cards */
-    .evidence-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-    .evidence-card {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 18px; transition: all 0.25s;
+    /* ===== PROGRESS ===== */
+    .prog-track {
+      background: var(--surface2);
+      border-radius: 3px; height: 3px;
+      overflow: hidden; margin-bottom: 8px;
     }
-    .evidence-card:hover { border-color: var(--accent); }
-    .evidence-card .ev-title { font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-    .evidence-card .ev-desc { font-size: 0.82rem; color: var(--text2); margin-bottom: 10px; }
-    .evidence-card .ev-link {
-      display: inline-block; padding: 6px 14px;
-      background: rgba(108,92,231,0.15); color: var(--accent2);
-      border-radius: 6px; text-decoration: none; font-size: 0.82rem;
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--navy3), var(--accent));
+      border-radius: 3px;
+      transition: width 0.5s var(--ease);
+      width: 0%;
     }
-    .evidence-card .ev-link:hover { background: rgba(108,92,231,0.3); }
+    .prog-text {
+      font-size: 0.72rem; color: var(--text3);
+      text-align: right; letter-spacing: 0.02em;
+    }
 
-    /* Export Button */
-    .export-btn {
+    /* ===== EVIDENCE GRID ===== */
+    .ev-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 10px;
+    }
+    .ev-card {
+      background: var(--bg2);
+      border: 1px solid var(--border3);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: all 0.2s var(--ease);
+    }
+    .ev-card:hover { border-color: var(--navy2); }
+    .ev-card .ev-title { font-weight: 600; font-size: 0.92rem; margin-bottom: 8px; }
+    .ev-card .ev-desc {
+      font-size: 0.82rem; color: var(--text2);
+      margin-bottom: 16px; line-height: 1.75;
+    }
+    .ev-card .ev-link {
+      display: inline-block;
+      padding: 5px 14px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid rgba(45,125,210,0.15);
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.78rem;
+      transition: all 0.15s var(--ease);
+    }
+    .ev-card .ev-link:hover { background: var(--accent-glow2); border-color: var(--accent); }
+
+    /* ===== EXPORT BTN ===== */
+    .btn-export {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 24px; background: linear-gradient(135deg, var(--accent), #5a4bd1);
-      color: white; border: none; border-radius: 10px; cursor: pointer;
-      font-size: 0.95rem; font-weight: 500; margin-top: 20px; transition: all 0.25s;
+      padding: 13px 32px;
+      background: var(--navy);
+      color: #d0ddef;
+      border: 1px solid var(--navy2);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 0.88rem; font-weight: 500;
+      font-family: var(--font);
+      margin-top: 28px;
+      transition: all 0.2s var(--ease);
     }
-    .export-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(108,92,231,0.4); }
+    .btn-export:hover {
+      background: var(--navy2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 24px rgba(13,43,78,0.5);
+    }
 
-    /* Toast */
+    /* ===== TOAST ===== */
     .toast {
-      position: fixed; bottom: 30px; left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 12px 24px; border-radius: 10px; font-size: 0.9rem;
-      z-index: 1000; transition: transform 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      position: fixed; bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      font-size: 0.86rem;
+      z-index: 1000;
+      transition: transform 0.3s var(--ease);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+      color: var(--text);
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* Loading */
-    .loading { display: none; align-items: center; gap: 8px; color: var(--text2); font-size: 0.85rem; margin-top: 12px; }
+    /* ===== LOADING ===== */
+    .loading {
+      display: none; align-items: center; gap: 10px;
+      color: var(--text3); font-size: 0.84rem; margin-top: 14px;
+    }
     .loading.active { display: flex; }
     .spinner {
-      width: 16px; height: 16px; border: 2px solid var(--border);
-      border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
+      width: 14px; height: 14px;
+      border: 1.5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Footer */
+    /* ===== FOOTER ===== */
     .footer {
-      text-align: center; padding: 32px 20px; color: var(--text2);
-      font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 20px;
+      text-align: center;
+      padding: 40px 28px;
+      color: var(--text3);
+      font-size: 0.74rem;
+      position: relative;
+    }
+    .footer::before {
+      content: '';
+      display: block;
+      width: 40px; height: 1px;
+      background: var(--border2);
+      margin: 0 auto 28px;
     }
     .footer a { color: var(--accent2); text-decoration: none; }
     .footer a:hover { text-decoration: underline; }
-
-    /* Tab navigation */
-    .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface2); border-radius: 10px; padding: 4px; }
-    .tab {
-      flex: 1; padding: 10px 8px; background: transparent; border: none;
-      color: var(--text2); font-size: 0.85rem; font-weight: 500; cursor: pointer;
-      border-radius: 8px; transition: all 0.25s; white-space: nowrap;
+    .footer .disclaimer {
+      margin-top: 8px; font-size: 0.68rem;
+      color: var(--text3); opacity: 0.6;
     }
-    .tab.active { background: var(--accent); color: white; }
-    .tab:hover:not(.active) { color: var(--text); }
 
-    /* Divider */
-    .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-
-    /* Tag */
-    .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 500; }
-    .tag-free { background: rgba(0,206,201,0.15); color: var(--green); }
-    .tag-partial { background: rgba(253,203,110,0.15); color: var(--orange); }
-    .tag-key { background: rgba(255,107,107,0.15); color: var(--red); }
-
-    /* Warning box */
-    .warning-box {
-      background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.25);
-      border-radius: 10px; padding: 14px 18px; margin-top: 16px;
+    /* ===== PRACTICE ===== */
+    .practice-list {
+      color: var(--text2); font-size: 0.84rem; line-height: 1.85;
     }
-    .warning-box p { font-size: 0.85rem; color: var(--red); }
-    .warning-box .warn-title { font-weight: 600; margin-bottom: 4px; }
+    .practice-list p { margin-bottom: 6px; }
+    .practice-list strong { color: var(--text); }
 
-    /* Responsive */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 640px) {
-      .header h1 { font-size: 1.5rem; }
-      .section { padding: 20px; }
-      .search-grid { grid-template-columns: 1fr; }
-      .evidence-grid { grid-template-columns: 1fr; }
-      .url-input-group { flex-direction: column; }
-      .tab { font-size: 0.78rem; padding: 8px 4px; }
+      .hero h1 { font-size: 1.8rem; }
+      .hero { padding: 48px 20px 36px; }
+      .hero-methods { gap: 20px; }
+      .panel-body { padding: 20px; }
+      .panel-header { padding: 20px 20px 0; }
+      .link-grid { grid-template-columns: 1fr; }
+      .ev-grid { grid-template-columns: 1fr; }
+      .input-row { flex-direction: column; }
+      .tabbar-btn { font-size: 0.72rem; padding: 9px 4px; }
+      .nav-inner { padding: 0 16px; }
+      .container { padding: 32px 16px 48px; }
+      .nav-links { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     }
   </style>
 </head>
 <body>
 
-<!-- Header -->
-<header class="header">
-  <h1>🔍 包装原创性检测</h1>
-  <p>上传包装图片或输入关键词，一键跳转各大公开检索平台，零成本验证原创性</p>
-  <p class="subtitle">四步检测法：查外观设计专利 → 查著作权 → 查商标 → 全网图像比对 + 留存创作证据</p>
-</header>
+<!-- Navigation -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <span class="logo-mark">◈</span>
+      包装检测
+    </a>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="switchTab('step1')">① 专利</button>
+      <button class="nav-link" onclick="switchTab('step4')">④ 以图搜图</button>
+      <button class="nav-link" onclick="switchTab('step2')">② 版权</button>
+      <button class="nav-link" onclick="switchTab('step3')">③ 商标</button>
+      <button class="nav-link" onclick="switchTab('checklist')">自查</button>
+      <button class="nav-link" onclick="switchTab('evidence')">证据</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-tag"><span class="dot"></span>四步检测法 v2.0</div>
+  <h1>包装<em>原创性</em>检测</h1>
+  <p class="sub">上传包装图片或输入关键词，一键跳转公开检索平台，零成本完成知识产权预排查</p>
+  <div class="hero-methods">
+    <span><b>①</b> 专利</span>
+    <span><b>②</b> 版权</span>
+    <span><b>③</b> 商标</span>
+    <span><b>④</b> 全网比对</span>
+  </div>
+</section>
 
 <div class="container">
 
-  <!-- Tab Navigation -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('step1')">① 查专利</button>
-    <button class="tab" onclick="switchTab('step4')">④ 以图搜图</button>
-    <button class="tab" onclick="switchTab('step2')">② 查版权</button>
-    <button class="tab" onclick="switchTab('step3')">③ 查商标</button>
-    <button class="tab" onclick="switchTab('checklist')">✅ 自查清单</button>
-    <button class="tab" onclick="switchTab('evidence')">📝 证据留存</button>
+  <!-- Tab Bar -->
+  <div class="tabbar">
+    <button class="tabbar-btn active" onclick="switchTab('step1')">① 查外观设计专利</button>
+    <button class="tabbar-btn" onclick="switchTab('step4')">④ 全网图像比对</button>
+    <button class="tabbar-btn" onclick="switchTab('step2')">② 查著作权</button>
+    <button class="tabbar-btn" onclick="switchTab('step3')">③ 查商标</button>
+    <button class="tabbar-btn" onclick="switchTab('checklist')">✓ 自查清单</button>
+    <button class="tabbar-btn" onclick="switchTab('evidence')">证据留存</button>
   </div>
 
   <!-- ==================== STEP 1: 外观设计专利 ==================== -->
   <div id="tab-step1" class="tab-content">
-    <div class="section">
-      <div class="section-title">
-        <span class="step-badge step-1">1</span>
-        <span class="icon icon-red">🏛️</span>
-        查外观设计专利<span class="tag tag-key" style="margin-left:8px">最关键</span>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="step-badge s1">1</span>
+        <span class="panel-title">查外观设计专利 <span class="key-badge critical">最关键</span></span>
       </div>
+      <div class="panel-body">
 
-      <!-- 操作指引 -->
-      <div class="info-box info-box-red">
-        <h4>📋 操作步骤</h4>
-        <ol style="padding-left:18px">
-          <li>进入国知局专利检索系统，选择<strong>「高级检索」</strong></li>
-          <li>选择<strong>「外观设计」</strong>分类</li>
-          <li>填写<strong>产品名称、用途</strong>（如"包装盒""卫生巾包装"）</li>
-          <li>按<strong>洛迦诺分类</strong>筛选——包装多为 <span class="highlight">09类</span>（09-01包装容器、09-03盒/箱等）</li>
-          <li>上传包装<strong>正/侧/顶视图</strong>，系统自动比对相似度</li>
-          <li>导出高相似列表，逐一排查</li>
-        </ol>
-      </div>
+        <div class="info-strip danger-l">
+          <h4>操作步骤</h4>
+          <ol>
+            <li>进入国知局专利检索系统，选择<strong>「高级检索」</strong></li>
+            <li>选择<strong>「外观设计」</strong>分类</li>
+            <li>填写<strong>产品名称、用途</strong>（如"包装盒""卫生巾包装"）</li>
+            <li>按<strong>洛迦诺分类</strong>筛选——包装多为 <span class="hl">09类</span>（09-01包装容器、09-03盒/箱等）</li>
+            <li>上传包装<strong>正/侧/顶视图</strong>，系统自动比对相似度</li>
+            <li>导出高相似列表，逐一排查</li>
+          </ol>
+        </div>
 
-      <div class="info-box" style="margin-top:12px">
-        <h4>🎯 重点看什么</h4>
-        <ul>
-          <li><strong>相同/近似设计</strong> — 整体观察、综合判断，不是比细节，是比整体印象</li>
-          <li><strong>申请日</strong> — 比你的设计更早还是更晚</li>
-          <li><strong>法律状态</strong> — <span class="key-point">授权</span>才构成权利，申请中/驳回/无效的不构成</li>
-          <li>注意：虚线部分不受保护，<strong>实线部分才受保护</strong></li>
-        </ul>
-      </div>
+        <div class="info-strip">
+          <h4>重点看什么</h4>
+          <ul>
+            <li><strong>相同/近似设计</strong> — 整体观察、综合判断，不是比细节，是比整体印象</li>
+            <li><strong>申请日</strong> — 比你的设计更早还是更晚</li>
+            <li><strong>法律状态</strong> — <span class="danger">授权</span>才构成权利，申请中/驳回/无效的不构成</li>
+            <li>注意：虚线部分不受保护，<strong>实线部分才受保护</strong></li>
+          </ul>
+        </div>
 
-      <!-- 专利检索平台 -->
-      <div class="sub-heading">🏛️ 官方检索平台</div>
-      <div class="search-grid">
-        <a class="search-btn" id="btn-cnipa" target="_blank" rel="noopener" href="https://pss-system.cponline.cnipa.gov.cn/">
-          <span class="btn-icon">🏛️</span>
-          <div>
-            <div class="btn-label">国知局专利检索</div>
-            <div class="btn-desc">中国外观设计+发明</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn" id="btn-google-patents" target="_blank" rel="noopener" href="https://patents.google.com/">
-          <span class="btn-icon">🔵</span>
-          <div>
-            <div class="btn-label">Google Patents</div>
-            <div class="btn-desc">全球专利全文检索</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn" id="btn-wipo" target="_blank" rel="noopener" href="https://www.wipo.int/designdb/">
-          <span class="btn-icon">🌍</span>
-          <div>
-            <div class="btn-label">WIPO 外观设计</div>
-            <div class="btn-desc">国际外观设计数据库</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn" id="btn-eu-design" target="_blank" rel="noopener" href="https://www.tmdn.org/tmdsview-web/">
-          <span class="btn-icon">🇪🇺</span>
-          <div>
-            <div class="btn-label">EU DesignView</div>
-            <div class="btn-desc">欧盟外观设计检索</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn" id="btn-uspto-design" target="_blank" rel="noopener" href="https://www.uspto.gov/patents/search">
-          <span class="btn-icon">🇺🇸</span>
-          <div>
-            <div class="btn-label">USPTO 外观专利</div>
-            <div class="btn-desc">美国外观设计专利</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-      </div>
+        <div class="sub-label">官方检索平台</div>
+        <div class="link-grid">
+          <a class="link-card" target="_blank" rel="noopener" href="https://pss-system.cponline.cnipa.gov.cn/">
+            <span class="lc-icon">CN</span>
+            <div class="lc-text">
+              <div class="lc-name">国知局专利检索 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">中国外观设计+发明</div>
+            </div>
+          </a>
+          <a class="link-card" id="btn-google-patents" target="_blank" rel="noopener" href="https://patents.google.com/">
+            <span class="lc-icon">GP</span>
+            <div class="lc-text">
+              <div class="lc-name">Google Patents <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">全球专利全文检索</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.wipo.int/designdb/">
+            <span class="lc-icon">WI</span>
+            <div class="lc-text">
+              <div class="lc-name">WIPO 外观设计 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">国际外观设计数据库</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.tmdn.org/tmdsview-web/">
+            <span class="lc-icon">EU</span>
+            <div class="lc-text">
+              <div class="lc-name">EU DesignView <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">欧盟外观设计检索</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.uspto.gov/patents/search">
+            <span class="lc-icon">US</span>
+            <div class="lc-text">
+              <div class="lc-name">USPTO 外观专利 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">美国外观设计专利</div>
+            </div>
+          </a>
+        </div>
 
-      <!-- 第三方专业工具 -->
-      <div class="sub-heading">🔧 第三方专业工具（可一键导出高相似列表）</div>
-      <div class="search-grid">
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.baiten.cn/">
-          <span class="btn-icon">📊</span>
-          <div>
-            <div class="btn-label">佰腾专利检索</div>
-            <div class="btn-desc">中外专利数据库，支持图片搜索</div>
-          </div>
-          <span class="tag tag-partial">部分免费</span>
-        </a>
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.incopat.com/">
-          <span class="btn-icon">🔬</span>
-          <div>
-            <div class="btn-label">Incopat</div>
-            <div class="btn-desc">全球专利检索+分析，外观比对强</div>
-          </div>
-          <span class="tag tag-partial">付费</span>
-        </a>
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.patentics.com/">
-          <span class="btn-icon">🧠</span>
-          <div>
-            <div class="btn-label">Patentics</div>
-            <div class="btn-desc">AI语义检索，智能相似度排序</div>
-          </div>
-          <span class="tag tag-partial">付费</span>
-        </a>
-      </div>
+        <div class="sub-label">第三方专业工具</div>
+        <div class="link-grid">
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.baiten.cn/">
+            <span class="lc-icon">BT</span>
+            <div class="lc-text">
+              <div class="lc-name">佰腾专利检索 <span class="key-badge paid">部分免费</span></div>
+              <div class="lc-desc">中外专利数据库，支持图片搜索</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.incopat.com/">
+            <span class="lc-icon">IC</span>
+            <div class="lc-text">
+              <div class="lc-name">Incopat <span class="key-badge paid">付费</span></div>
+              <div class="lc-desc">全球专利检索+分析，外观比对强</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.patentics.com/">
+            <span class="lc-icon">PT</span>
+            <div class="lc-text">
+              <div class="lc-name">Patentics <span class="key-badge paid">付费</span></div>
+              <div class="lc-desc">AI语义检索，智能相似度排序</div>
+            </div>
+          </a>
+        </div>
 
-      <!-- 洛迦诺分类参考 -->
-      <div class="info-box info-box-blue" style="margin-top:16px">
-        <h4>🏷️ 洛迦诺分类参考（包装常用）</h4>
-        <ul>
-          <li><strong>09-01</strong> — 瓶、罐、容器（包装容器类）</li>
-          <li><strong>09-03</strong> — 盒、箱、集装箱</li>
-          <li><strong>09-05</strong> — 袋、小袋、管状袋</li>
-          <li><strong>09-07</strong> — 封口盖、密封装置</li>
-          <li><strong>09-99</strong> — 其他包装</li>
-        </ul>
-        <p style="margin-top:8px">💡 卫生巾包装常用分类：<strong>09-01</strong>（袋装/盒装容器）、<strong>09-03</strong>（翻盖盒/抽屉盒）</p>
+        <div class="info-strip accent-l" style="margin-top:24px">
+          <h4>洛迦诺分类参考（包装常用）</h4>
+          <ul>
+            <li><strong>09-01</strong> — 瓶、罐、容器（包装容器类）</li>
+            <li><strong>09-03</strong> — 盒、箱、集装箱</li>
+            <li><strong>09-05</strong> — 袋、小袋、管状袋</li>
+            <li><strong>09-07</strong> — 封口盖、密封装置</li>
+            <li><strong>09-99</strong> — 其他包装</li>
+          </ul>
+          <p style="margin-top:8px">卫生巾包装常用分类：<strong>09-01</strong>（袋装/盒装容器）、<strong>09-03</strong>（翻盖盒/抽屉盒）</p>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- ==================== STEP 4: 全网图像比对 ==================== -->
   <div id="tab-step4" class="tab-content" style="display:none">
-    <div class="section">
-      <div class="section-title">
-        <span class="step-badge step-4">4</span>
-        <span class="icon icon-green">📷</span>
-        全网图像比对（快速初筛）
+    <div class="panel">
+      <div class="panel-header">
+        <span class="step-badge s4">4</span>
+        <span class="panel-title">全网图像比对（快速初筛）</span>
       </div>
+      <div class="panel-body">
 
-      <div class="info-box info-box-green">
-        <h4>📋 操作逻辑</h4>
-        <ul>
-          <li>上传包装图 → 搜相似包装，看是否<strong>早于你的设计公开</strong></li>
-          <li>重点排查：<span class="highlight">更早发布的同款/高度近似设计</span></li>
-          <li>专利没查到不代表没人用过，很多包装没申请专利但已在市场流通</li>
-        </ul>
-      </div>
+        <div class="info-strip success-l">
+          <h4>操作逻辑</h4>
+          <ul>
+            <li>上传包装图 → 搜相似包装，看是否<strong>早于你的设计公开</strong></li>
+            <li>重点排查：<span class="hl">更早发布的同款/高度近似设计</span></li>
+            <li>专利没查到不代表没人用过，很多包装没申请专利但已在市场流通</li>
+          </ul>
+        </div>
 
-      <!-- Upload Area -->
-      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-        <div class="upload-icon">📤</div>
-        <p>点击上传包装图片或拖拽到此处</p>
-        <p class="hint">支持 JPG/PNG/WebP，最大 10MB → 上传后自动获取公网URL</p>
-        <input type="file" id="fileInput" accept="image/*">
-      </div>
+        <!-- Upload -->
+        <div class="upload-zone" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+          <div class="uz-icon">↑</div>
+          <p>点击上传包装图片或拖拽到此处</p>
+          <p class="uz-hint">支持 JPG / PNG / WebP，最大 10MB → 上传后自动获取公网 URL</p>
+          <input type="file" id="fileInput" accept="image/*">
+        </div>
 
-      <div style="text-align:center;color:var(--text3);font-size:0.85rem;margin:16px 0">— 或直接粘贴图片URL —</div>
-      <div class="url-input-group">
-        <input type="text" id="imageUrlInput" placeholder="https://example.com/packaging.jpg">
-        <button onclick="useImageUrl()">使用此URL</button>
-      </div>
+        <div class="or-line">或直接粘贴图片 URL</div>
+        <div class="input-row">
+          <input type="text" id="imageUrlInput" placeholder="https://example.com/packaging.jpg">
+          <button class="btn-primary" onclick="useImageUrl()">使用此 URL</button>
+        </div>
 
-      <!-- Preview -->
-      <div class="preview-container" id="previewContainer">
-        <hr class="divider">
-        <img id="previewImg" class="preview-img" alt="Preview">
-        <div class="preview-url" id="previewUrl"></div>
-      </div>
+        <!-- Preview -->
+        <div class="preview-wrap" id="previewContainer">
+          <hr class="hr">
+          <img id="previewImg" class="preview-img" alt="Preview">
+          <div class="preview-url" id="previewUrl"></div>
+        </div>
 
-      <!-- Loading -->
-      <div class="loading" id="uploadLoading">
-        <div class="spinner"></div>
-        <span>正在上传图片到图床...</span>
-      </div>
+        <!-- Loading -->
+        <div class="loading" id="uploadLoading">
+          <div class="spinner"></div>
+          <span>正在上传图片到图床...</span>
+        </div>
 
-      <!-- 搜图平台 -->
-      <div class="sub-heading">🔍 搜图平台</div>
-      <div class="search-grid" id="imageSearchGrid">
-        <a class="search-btn disabled" id="btn-google-lens" target="_blank" rel="noopener">
-          <span class="btn-icon">🔵</span>
-          <div>
-            <div class="btn-label">Google Lens</div>
-            <div class="btn-desc">全球最强制图搜索，商品精准匹配</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn disabled" id="btn-tineye" target="_blank" rel="noopener">
-          <span class="btn-icon">🟢</span>
-          <div>
-            <div class="btn-label">TinEye</div>
-            <div class="btn-desc">图片溯源追踪，找原始来源</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn disabled" id="btn-yandex" target="_blank" rel="noopener">
-          <span class="btn-icon">🔴</span>
-          <div>
-            <div class="btn-label">Yandex 图片</div>
-            <div class="btn-desc">相似图识别能力极强</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn disabled" id="btn-baidu" target="_blank" rel="noopener">
-          <span class="btn-icon">🟡</span>
-          <div>
-            <div class="btn-label">百度识图</div>
-            <div class="btn-desc">国内电商+全网覆盖</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn disabled" id="btn-bing" target="_blank" rel="noopener">
-          <span class="btn-icon">🔷</span>
-          <div>
-            <div class="btn-label">Bing 视觉搜索</div>
-            <div class="btn-desc">微软图搜，覆盖欧美</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn disabled" id="btn-sogou" target="_blank" rel="noopener">
-          <span class="btn-icon">🐕</span>
-          <div>
-            <div class="btn-label">搜狗识图</div>
-            <div class="btn-desc">微信生态+国内图片</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-      </div>
+        <div class="sub-label">搜图平台</div>
+        <div class="link-grid" id="imageSearchGrid">
+          <a class="link-card disabled" id="btn-google-lens" target="_blank" rel="noopener">
+            <span class="lc-icon">GL</span>
+            <div class="lc-text">
+              <div class="lc-name">Google Lens <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">全球最强图像识别</div>
+            </div>
+          </a>
+          <a class="link-card disabled" id="btn-tineye" target="_blank" rel="noopener">
+            <span class="lc-icon">TE</span>
+            <div class="lc-text">
+              <div class="lc-name">TinEye <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">图片溯源追踪</div>
+            </div>
+          </a>
+          <a class="link-card disabled" id="btn-yandex" target="_blank" rel="noopener">
+            <span class="lc-icon">YX</span>
+            <div class="lc-text">
+              <div class="lc-name">Yandex 图片 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">相似图识别能力极强</div>
+            </div>
+          </a>
+          <a class="link-card disabled" id="btn-baidu" target="_blank" rel="noopener">
+            <span class="lc-icon">BD</span>
+            <div class="lc-text">
+              <div class="lc-name">百度识图 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">国内电商+全网覆盖</div>
+            </div>
+          </a>
+          <a class="link-card disabled" id="btn-bing" target="_blank" rel="noopener">
+            <span class="lc-icon">BG</span>
+            <div class="lc-text">
+              <div class="lc-name">Bing 视觉搜索 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">微软图搜，覆盖欧美</div>
+            </div>
+          </a>
+          <a class="link-card disabled" id="btn-sogou" target="_blank" rel="noopener">
+            <span class="lc-icon">SG</span>
+            <div class="lc-text">
+              <div class="lc-name">搜狗识图 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">微信生态+国内图片</div>
+            </div>
+          </a>
+        </div>
 
-      <!-- 电商平台 -->
-      <div class="sub-heading">🛒 电商平台（搜同款/相似包装）</div>
-      <div class="info-box">
-        <ul>
-          <li><strong>淘宝/天猫</strong> — 搜索框右侧相机图标 → 上传图片搜同款</li>
-          <li><strong>京东</strong> — 搜索框相机图标 → 拍照购</li>
-          <li><strong>拼多多</strong> — 搜索框相机图标 → 搜同款</li>
-          <li><strong>1688</strong> — 以图搜图找OEM公版包装</li>
-          <li><strong>Amazon</strong> — 电商图搜，排查海外市场</li>
-          <li><strong>AliExpress</strong> — 速卖通图搜，排查出口市场</li>
-        </ul>
-      </div>
+        <div class="sub-label">电商平台操作指引</div>
+        <div class="info-strip">
+          <ul>
+            <li><strong>淘宝/天猫</strong> — 搜索框右侧相机图标 → 上传图片搜同款</li>
+            <li><strong>京东</strong> — 搜索框相机图标 → 拍照购</li>
+            <li><strong>拼多多</strong> — 搜索框相机图标 → 搜同款</li>
+            <li><strong>1688</strong> — 以图搜图找 OEM 公版包装</li>
+            <li><strong>Amazon</strong> — 电商图搜，排查海外市场</li>
+            <li><strong>AliExpress</strong> — 速卖通图搜，排查出口市场</li>
+          </ul>
+        </div>
 
-      <!-- 设计社区 -->
-      <div class="sub-heading">🎨 设计社区（排查素材来源）</div>
-      <div class="search-grid">
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.zcool.com.cn/">
-          <span class="btn-icon">🎯</span>
-          <div>
-            <div class="btn-label">站酷</div>
-            <div class="btn-desc">国内设计师社区</div>
-          </div>
-        </a>
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.behance.net/">
-          <span class="btn-icon">🅱️</span>
-          <div>
-            <div class="btn-label">Behance</div>
-            <div class="btn-desc">全球设计师作品展示</div>
-          </div>
-        </a>
-        <a class="search-btn" target="_blank" rel="noopener" href="https://dribbble.com/">
-          <span class="btn-icon">🏀</span>
-          <div>
-            <div class="btn-label">Dribbble</div>
-            <div class="btn-desc">UI/品牌设计社区</div>
-          </div>
-        </a>
+        <div class="sub-label">设计社区</div>
+        <div class="link-grid">
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.zcool.com.cn/">
+            <span class="lc-icon">ZC</span>
+            <div class="lc-text">
+              <div class="lc-name">站酷</div>
+              <div class="lc-desc">国内设计师社区</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.behance.net/">
+            <span class="lc-icon">BE</span>
+            <div class="lc-text">
+              <div class="lc-name">Behance</div>
+              <div class="lc-desc">全球设计师作品展示</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://dribbble.com/">
+            <span class="lc-icon">DR</span>
+            <div class="lc-text">
+              <div class="lc-name">Dribbble</div>
+              <div class="lc-desc">UI/品牌设计社区</div>
+            </div>
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- ==================== STEP 2: 著作权 ==================== -->
   <div id="tab-step2" class="tab-content" style="display:none">
-    <div class="section">
-      <div class="section-title">
-        <span class="step-badge step-2">2</span>
-        <span class="icon icon-blue">📜</span>
-        查著作权（版权）
+    <div class="panel">
+      <div class="panel-header">
+        <span class="step-badge s2">2</span>
+        <span class="panel-title">查著作权（版权）</span>
       </div>
+      <div class="panel-body">
 
-      <div class="info-box info-box-blue">
-        <h4>📋 操作步骤</h4>
-        <ol style="padding-left:18px">
-          <li>进入中国版权保护中心 → <strong>作品登记公告查询</strong></li>
-          <li>输入检索词：<strong>包装名称、设计方、著作权人、标注信息</strong></li>
-          <li>查看登记证书上的作品名称、登记日期、著作权人</li>
-        </ol>
-      </div>
+        <div class="info-strip accent-l">
+          <h4>操作步骤</h4>
+          <ol>
+            <li>进入中国版权保护中心 → <strong>作品登记公告查询</strong></li>
+            <li>输入检索词：<strong>包装名称、设计方、著作权人、标注信息</strong></li>
+            <li>查看登记证书上的作品名称、登记日期、著作权人</li>
+          </ol>
+        </div>
 
-      <div class="info-box" style="margin-top:12px">
-        <h4>⚠️ 重要说明</h4>
-        <ul>
-          <li>版权是<strong>自动保护</strong>的，登记不是必需条件</li>
-          <li><span class="key-point">查不到登记 ≠ 无版权</span>，很多作品未登记也受保护</li>
-          <li>但<strong>查到登记可佐证权属</strong>，对维权和抗辩都有利</li>
-          <li>版权保护的是<strong>表达形式</strong>，不保护思想/功能</li>
-        </ul>
-      </div>
+        <div class="info-strip">
+          <h4>重要说明</h4>
+          <ul>
+            <li>版权是<strong>自动保护</strong>的，登记不是必需条件</li>
+            <li><span class="danger">查不到登记 ≠ 无版权</span>，很多作品未登记也受保护</li>
+            <li>但<strong>查到登记可佐证权属</strong>，对维权和抗辩都有利</li>
+            <li>版权保护的是<strong>表达形式</strong>，不保护思想/功能</li>
+          </ul>
+        </div>
 
-      <!-- 版权检索平台 -->
-      <div class="sub-heading">🏛️ 版权检索平台</div>
-      <div class="search-grid">
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.ccopyright.com.cn/">
-          <span class="btn-icon">📜</span>
-          <div>
-            <div class="btn-label">中国版权保护中心</div>
-            <div class="btn-desc">作品登记公告查询</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.ncac.gov.cn/">
-          <span class="btn-icon">🏛️</span>
-          <div>
-            <div class="btn-label">国家版权局</div>
-            <div class="btn-desc">版权法律法规+公告</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-      </div>
+        <div class="sub-label">版权检索平台</div>
+        <div class="link-grid">
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.ccopyright.com.cn/">
+            <span class="lc-icon">CC</span>
+            <div class="lc-text">
+              <div class="lc-name">中国版权保护中心 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">作品登记公告查询</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.ncac.gov.cn/">
+            <span class="lc-icon">NC</span>
+            <div class="lc-text">
+              <div class="lc-name">国家版权局 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">版权法律法规+公告</div>
+            </div>
+          </a>
+        </div>
 
-      <!-- 辅助排查 -->
-      <div class="sub-heading">🔍 辅助排查（确认素材来源）</div>
-      <div class="search-grid">
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.shutterstock.com/">
-          <span class="btn-icon">📷</span>
-          <div>
-            <div class="btn-label">Shutterstock</div>
-            <div class="btn-desc">图搜确认是否为素材库图片</div>
-          </div>
-        </a>
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.58pic.com/">
-          <span class="btn-icon">🎨</span>
-          <div>
-            <div class="btn-label">千图网</div>
-            <div class="btn-desc">国内素材库排查</div>
-          </div>
-        </a>
-        <a class="search-btn" target="_blank" rel="noopener" href="https://www.bilibili.com/">
-          <span class="btn-icon">📺</span>
-          <div>
-            <div class="btn-label">B站教程</div>
-            <div class="btn-desc">搜"字体版权""商用授权"</div>
-          </div>
-        </a>
-      </div>
+        <div class="sub-label">辅助排查</div>
+        <div class="link-grid">
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.shutterstock.com/">
+            <span class="lc-icon">SS</span>
+            <div class="lc-text">
+              <div class="lc-name">Shutterstock</div>
+              <div class="lc-desc">图搜确认是否为素材库图片</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.58pic.com/">
+            <span class="lc-icon">58</span>
+            <div class="lc-text">
+              <div class="lc-name">千图网</div>
+              <div class="lc-desc">国内素材库排查</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.bilibili.com/">
+            <span class="lc-icon">BL</span>
+            <div class="lc-text">
+              <div class="lc-name">B站教程</div>
+              <div class="lc-desc">搜"字体版权""商用授权"</div>
+            </div>
+          </a>
+        </div>
 
-      <div class="warning-box">
-        <p class="warn-title">🚨 字体版权高危区</p>
-        <p>方正、汉仪等字体公司的商用授权追缴非常积极。包装上每个字体都必须确认：①是否有商用授权 ②授权范围是否覆盖包装印刷 ③免费字体（如思源）需看具体许可协议</p>
+        <div class="warn-strip">
+          <p class="wt">字体版权高危区</p>
+          <p>方正、汉仪等字体公司的商用授权追缴非常积极。包装上每个字体都必须确认：①是否有商用授权 ②授权范围是否覆盖包装印刷 ③免费字体（如思源）需看具体许可协议</p>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- ==================== STEP 3: 商标 ==================== -->
   <div id="tab-step3" class="tab-content" style="display:none">
-    <div class="section">
-      <div class="section-title">
-        <span class="step-badge step-3">3</span>
-        <span class="icon icon-orange">™️</span>
-        查商标（含立体商标）
+    <div class="panel">
+      <div class="panel-header">
+        <span class="step-badge s3">3</span>
+        <span class="panel-title">查商标（含立体商标）</span>
       </div>
+      <div class="panel-body">
 
-      <div class="info-box info-box-orange">
-        <h4>📋 检索方式</h4>
-        <ul>
-          <li><strong>文字商标</strong> — 查品牌名是否已被注册</li>
-          <li><strong>图形商标</strong> — 查包装上的图形标识是否近似</li>
-          <li><strong>立体商标</strong> — 查瓶型/盒型的立体形状是否已注册</li>
-          <li>核对 <strong>相同/近似 + 同类商品</strong>（包装多为第16类，卫生用品为第5类）</li>
-        </ul>
-      </div>
+        <div class="info-strip warn-l">
+          <h4>检索方式</h4>
+          <ul>
+            <li><strong>文字商标</strong> — 查品牌名是否已被注册</li>
+            <li><strong>图形商标</strong> — 查包装上的图形标识是否近似</li>
+            <li><strong>立体商标</strong> — 查瓶型/盒型的立体形状是否已注册</li>
+            <li>核对 <strong>相同/近似 + 同类商品</strong>（包装多为第16类，卫生用品为第5类）</li>
+          </ul>
+        </div>
 
-      <div class="warning-box" style="margin-top:16px">
-        <p class="warn-title">🚨 知名品牌特有包装/装潢</p>
-        <p>即使没有专利/商标，知名品牌特有的包装装潢也受《反不正当竞争法》保护！<br>
-        例：可口可乐瓶型、LV花纹、茅台酒瓶——包装形状、颜色组合、图案风格如果与知名品牌高度近似，<strong>即使无专利也构成侵权</strong>。</p>
-      </div>
+        <div class="warn-strip">
+          <p class="wt">知名品牌特有包装/装潢</p>
+          <p>即使没有专利/商标，知名品牌特有的包装装潢也受《反不正当竞争法》保护。例：可口可乐瓶型、LV花纹、茅台酒瓶——包装形状、颜色组合、图案风格如果与知名品牌高度近似，<strong>即使无专利也构成侵权</strong>。</p>
+        </div>
 
-      <!-- 商标检索平台 -->
-      <div class="sub-heading">🏛️ 官方商标检索</div>
-      <div class="search-grid">
-        <a class="search-btn" id="btn-cnipa-tm" target="_blank" rel="noopener" href="https://sbj.cnipa.gov.cn/sbj/sbcx/">
-          <span class="btn-icon">🏛️</span>
-          <div>
-            <div class="btn-label">中国商标网</div>
-            <div class="btn-desc">国知局官方商标检索</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn" id="btn-tmview" target="_blank" rel="noopener" href="https://www.tmdn.org/tmview/">
-          <span class="btn-icon">🌍</span>
-          <div>
-            <div class="btn-label">TMview</div>
-            <div class="btn-desc">全球商标检索（欧盟+多国）</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-        <a class="search-btn" id="btn-uspto-tm" target="_blank" rel="noopener" href="https://tmsearch.uspto.gov/">
-          <span class="btn-icon">🇺🇸</span>
-          <div>
-            <div class="btn-label">USPTO 商标</div>
-            <div class="btn-desc">美国商标检索</div>
-          </div>
-          <span class="tag tag-free">免费</span>
-        </a>
-      </div>
+        <div class="sub-label">官方商标检索</div>
+        <div class="link-grid">
+          <a class="link-card" target="_blank" rel="noopener" href="https://sbj.cnipa.gov.cn/sbj/sbcx/">
+            <span class="lc-icon">CN</span>
+            <div class="lc-text">
+              <div class="lc-name">中国商标网 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">国知局官方商标检索</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://www.tmdn.org/tmview/">
+            <span class="lc-icon">TM</span>
+            <div class="lc-text">
+              <div class="lc-name">TMview <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">全球商标检索（欧盟+多国）</div>
+            </div>
+          </a>
+          <a class="link-card" target="_blank" rel="noopener" href="https://tmsearch.uspto.gov/">
+            <span class="lc-icon">US</span>
+            <div class="lc-text">
+              <div class="lc-name">USPTO 商标 <span class="key-badge free">免费</span></div>
+              <div class="lc-desc">美国商标检索</div>
+            </div>
+          </a>
+        </div>
 
-      <!-- 商标分类参考 -->
-      <div class="info-box info-box-orange" style="margin-top:16px">
-        <h4>🏷️ 包装相关商标分类参考</h4>
-        <ul>
-          <li><strong>第5类</strong> — 医药、卫生用品（卫生巾、护理用品）</li>
-          <li><strong>第16类</strong> — 纸制品、包装材料、印刷品</li>
-          <li><strong>第21类</strong> — 家用容器、化妆用具</li>
-          <li><strong>第3类</strong> — 化妆品、清洁用品</li>
-        </ul>
-        <p style="margin-top:8px">💡 查商标时要同时查<strong>相关类别</strong>，跨类近似也可能构成侵权</p>
-      </div>
+        <div class="info-strip warn-l" style="margin-top:20px">
+          <h4>包装相关商标分类参考</h4>
+          <ul>
+            <li><strong>第5类</strong> — 医药、卫生用品（卫生巾、护理用品）</li>
+            <li><strong>第16类</strong> — 纸制品、包装材料、印刷品</li>
+            <li><strong>第21类</strong> — 家用容器、化妆用具</li>
+            <li><strong>第3类</strong> — 化妆品、清洁用品</li>
+          </ul>
+          <p style="margin-top:8px">查商标时要同时查<strong>相关类别</strong>，跨类近似也可能构成侵权</p>
+        </div>
 
-      <!-- 品牌与企业 -->
-      <div class="sub-heading">🏢 品牌与企业查询</div>
-      <div class="keyword-group" style="margin-bottom:12px">
-        <input type="text" id="keywordInputTm" placeholder="输入品牌名/企业名搜索" oninput="updateTmLinks()">
-      </div>
-      <div class="search-grid">
-        <a class="search-btn" id="btn-qcc-tm" target="_blank" rel="noopener" href="https://www.qcc.com/">
-          <span class="btn-icon">📊</span>
-          <div>
-            <div class="btn-label">企查查</div>
-            <div class="btn-desc">企业信息+商标+知识产权</div>
-          </div>
-          <span class="tag tag-partial">部分免费</span>
-        </a>
-        <a class="search-btn" id="btn-tianyancha-tm" target="_blank" rel="noopener" href="https://www.tianyancha.com/">
-          <span class="btn-icon">👁️</span>
-          <div>
-            <div class="btn-label">天眼查</div>
-            <div class="btn-desc">企业+知识产权全景</div>
-          </div>
-          <span class="tag tag-partial">部分免费</span>
-        </a>
+        <div class="sub-label">品牌与企业查询</div>
+        <div class="input-row" style="margin-bottom:14px">
+          <input type="text" id="keywordInputTm" placeholder="输入品牌名 / 企业名搜索" oninput="updateTmLinks()">
+        </div>
+        <div class="link-grid">
+          <a class="link-card" id="btn-qcc-tm" target="_blank" rel="noopener" href="https://www.qcc.com/">
+            <span class="lc-icon">QC</span>
+            <div class="lc-text">
+              <div class="lc-name">企查查 <span class="key-badge paid">部分免费</span></div>
+              <div class="lc-desc">企业信息+商标+知识产权</div>
+            </div>
+          </a>
+          <a class="link-card" id="btn-tianyancha-tm" target="_blank" rel="noopener" href="https://www.tianyancha.com/">
+            <span class="lc-icon">TY</span>
+            <div class="lc-text">
+              <div class="lc-name">天眼查 <span class="key-badge paid">部分免费</span></div>
+              <div class="lc-desc">企业+知识产权全景</div>
+            </div>
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
 
   <!-- ==================== CHECKLIST ==================== -->
   <div id="tab-checklist" class="tab-content" style="display:none">
-    <div class="section">
-      <div class="section-title">
-        <span class="icon icon-orange">✅</span>
-        包装原创性自查清单
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">包装原创性自查清单</span>
       </div>
+      <div class="panel-body">
 
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
+        <div class="prog-track"><div class="prog-fill" id="progressFill"></div></div>
+        <div class="prog-text" id="progressText">0 / 12 已完成</div>
+
+        <hr class="hr">
+
+        <ul class="cl-list" id="checklist">
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="patent">
+            <div>
+              <div class="cl-label">① 外观设计专利检索（国内 — 国知局）</div>
+              <div class="cl-desc">高级检索→选外观设计→填产品名称/用途→洛迦诺09类筛选→上传正/侧/顶视图比对→导出高相似列表</div>
+              <a class="cl-link" href="https://pss-system.cponline.cnipa.gov.cn/" target="_blank">→ 前往国知局专利检索</a>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="patent">
+            <div>
+              <div class="cl-label">① 外观设计专利检索（出口目标国）</div>
+              <div class="cl-desc">如产品出口，需检索目标国外观设计专利（WIPO/欧盟/美国等），重点关注法律状态为"授权"的</div>
+              <a class="cl-link" href="https://www.wipo.int/designdb/" target="_blank">→ 前往WIPO外观设计检索</a>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="patent">
+            <div>
+              <div class="cl-label">① 第三方专利工具交叉验证</div>
+              <div class="cl-desc">用佰腾/Incopat/Patentics做交叉验证，这些工具可一键导出高相似列表</div>
+              <a class="cl-link" href="https://www.baiten.cn/" target="_blank">→ 前往佰腾专利检索</a>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="copyright">
+            <div>
+              <div class="cl-label">② 著作权登记公告查询</div>
+              <div class="cl-desc">在中国版权保护中心查包装名称/设计方/著作权人（注意：查不到≠无版权）</div>
+              <a class="cl-link" href="https://www.ccopyright.com.cn/" target="_blank">→ 前往中国版权保护中心</a>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="copyright">
+            <div>
+              <div class="cl-label">② 图形/插画版权排查</div>
+              <div class="cl-desc">通过反向图搜（Google Lens/TinEye）确认包装上的图形、插画是否原创或已获授权</div>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="copyright">
+            <div>
+              <div class="cl-label">② 字体版权确认</div>
+              <div class="cl-desc">确认包装使用的字体拥有商用授权，免费字体需确认具体许可协议</div>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="trademark">
+            <div>
+              <div class="cl-label">③ 商标冲突查询（含立体商标）</div>
+              <div class="cl-desc">查文字/图形/立体形状（瓶型/盒型）是否与已注册商标冲突，核对相同/近似+同类商品</div>
+              <a class="cl-link" href="https://sbj.cnipa.gov.cn/sbj/sbcx/" target="_blank">→ 前往中国商标网</a>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="trademark">
+            <div>
+              <div class="cl-label">③ 知名品牌包装/装潢排查</div>
+              <div class="cl-desc">排查是否与知名品牌特有包装/装潢高度近似（可口可乐瓶、LV花纹等，即使无专利也受保护）</div>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="compare">
+            <div>
+              <div class="cl-label">④ 搜图平台以图搜图</div>
+              <div class="cl-desc">Google Lens/百度识图/搜狗识图/TinEye上传包装图搜相似，看是否有更早公开的同款设计</div>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="compare">
+            <div>
+              <div class="cl-label">④ 电商平台搜同款/相似包装</div>
+              <div class="cl-desc">淘宝/京东/拼多多/1688搜同款+以图搜图，排查市场上的相似包装</div>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="compare">
+            <div>
+              <div class="cl-label">④ 设计社区排查素材来源</div>
+              <div class="cl-desc">站酷/Behance/Dribbble搜索，确认包装设计元素是否来自公开素材</div>
+            </div>
+          </li>
+          <li>
+            <input type="checkbox" onchange="updateProgress()" data-category="evidence">
+            <div>
+              <div class="cl-label">创作证据留存（区块链存证/著作权登记/文档归档）</div>
+              <div class="cl-desc">设计稿区块链存证（几分钟几元）、著作权登记（300-500元）、设计过程文档全部归档</div>
+            </div>
+          </li>
+        </ul>
+
+        <button class="btn-export" onclick="exportReport()">导出检测报告 ↓</button>
+
       </div>
-      <div class="progress-text" id="progressText">0 / 12 已完成</div>
-
-      <hr class="divider">
-
-      <ul class="checklist" id="checklist">
-        <!-- 专利 -->
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="patent">
-          <div>
-            <div class="check-label">① 外观设计专利检索（国内 — 国知局）</div>
-            <div class="check-desc">高级检索→选外观设计→填产品名称/用途→洛迦诺09类筛选→上传正/侧/顶视图比对→导出高相似列表</div>
-            <a class="check-link" href="https://pss-system.cponline.cnipa.gov.cn/" target="_blank">→ 前往国知局专利检索</a>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="patent">
-          <div>
-            <div class="check-label">① 外观设计专利检索（出口目标国）</div>
-            <div class="check-desc">如产品出口，需检索目标国外观设计专利（WIPO/欧盟/美国等），重点关注法律状态为"授权"的</div>
-            <a class="check-link" href="https://www.wipo.int/designdb/" target="_blank">→ 前往WIPO外观设计检索</a>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="patent">
-          <div>
-            <div class="check-label">① 第三方专利工具交叉验证</div>
-            <div class="check-desc">用佰腾/Incopat/Patentics做交叉验证，这些工具可一键导出高相似列表</div>
-            <a class="check-link" href="https://www.baiten.cn/" target="_blank">→ 前往佰腾专利检索</a>
-          </div>
-        </li>
-        <!-- 版权 -->
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="copyright">
-          <div>
-            <div class="check-label">② 著作权登记公告查询</div>
-            <div class="check-desc">在中国版权保护中心查包装名称/设计方/著作权人（注意：查不到≠无版权）</div>
-            <a class="check-link" href="https://www.ccopyright.com.cn/" target="_blank">→ 前往中国版权保护中心</a>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="copyright">
-          <div>
-            <div class="check-label">② 图形/插画版权排查</div>
-            <div class="check-desc">通过反向图搜（Google Lens/TinEye）确认包装上的图形、插画是否原创或已获授权</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="copyright">
-          <div>
-            <div class="check-label">② 字体版权确认</div>
-            <div class="check-desc">确认包装使用的字体拥有商用授权，免费字体需确认具体许可协议</div>
-          </div>
-        </li>
-        <!-- 商标 -->
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="trademark">
-          <div>
-            <div class="check-label">③ 商标冲突查询（含立体商标）</div>
-            <div class="check-desc">查文字/图形/立体形状（瓶型/盒型）是否与已注册商标冲突，核对相同/近似+同类商品</div>
-            <a class="check-link" href="https://sbj.cnipa.gov.cn/sbj/sbcx/" target="_blank">→ 前往中国商标网</a>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="trademark">
-          <div>
-            <div class="check-label">③ 知名品牌包装/装潢排查</div>
-            <div class="check-desc">排查是否与知名品牌特有包装/装潢高度近似（可口可乐瓶、LV花纹等，即使无专利也受保护）</div>
-          </div>
-        </li>
-        <!-- 全网比对 -->
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="compare">
-          <div>
-            <div class="check-label">④ 搜图平台以图搜图</div>
-            <div class="check-desc">Google Lens/百度识图/搜狗识图/TinEye上传包装图搜相似，看是否有更早公开的同款设计</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="compare">
-          <div>
-            <div class="check-label">④ 电商平台搜同款/相似包装</div>
-            <div class="check-desc">淘宝/京东/拼多多/1688搜同款+以图搜图，排查市场上的相似包装</div>
-          </div>
-        </li>
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="compare">
-          <div>
-            <div class="check-label">④ 设计社区排查素材来源</div>
-            <div class="check-desc">站酷/Behance/Dribbble搜索，确认包装设计元素是否来自公开素材</div>
-          </div>
-        </li>
-        <!-- 证据 -->
-        <li>
-          <input type="checkbox" onchange="updateProgress()" data-category="evidence">
-          <div>
-            <div class="check-label">创作证据留存（区块链存证/著作权登记/文档归档）</div>
-            <div class="check-desc">设计稿区块链存证（几分钟几元）、著作权登记（300-500元）、设计过程文档全部归档</div>
-          </div>
-        </li>
-      </ul>
-
-      <button class="export-btn" onclick="exportReport()">📄 导出检测报告</button>
     </div>
   </div>
 
   <!-- ==================== EVIDENCE ==================== -->
   <div id="tab-evidence" class="tab-content" style="display:none">
-    <div class="section">
-      <div class="section-title">
-        <span class="icon icon-red">📝</span>
-        创作证据留存指引
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">创作证据留存指引</span>
       </div>
+      <div class="panel-body">
 
-      <p style="color:var(--text2);font-size:0.9rem;margin-bottom:20px">
-        原创性的关键不仅是"做了什么"，更是<strong style="color:var(--text)">"能证明什么时候做的"</strong>。以下工具和平台可帮你建立时间戳证据链。
-      </p>
+        <p style="color:var(--text2);font-size:0.88rem;margin-bottom:28px;line-height:1.75">
+          原创性的关键不仅是"做了什么"，更是<strong style="color:var(--text)">"能证明什么时候做的"</strong>。以下工具和平台可帮你建立时间戳证据链。
+        </p>
 
-      <div class="evidence-grid">
-        <div class="evidence-card">
-          <div class="ev-title">⚡ 区块链存证</div>
-          <div class="ev-desc">上传设计稿获取不可篡改的时间戳，几分钟即可完成，费用极低（几元/次）</div>
-          <a class="ev-link" href="https://attest.aliyun.com/" target="_blank">阿里云存证</a>
-          <a class="ev-link" href="https://www.baidu.com/s?wd=区块链存证平台" target="_blank" style="margin-left:6px">更多平台</a>
+        <div class="ev-grid">
+          <div class="ev-card">
+            <div class="ev-title">⚡ 区块链存证</div>
+            <div class="ev-desc">上传设计稿获取不可篡改的时间戳，几分钟即可完成，费用极低（几元/次）</div>
+            <a class="ev-link" href="https://attest.aliyun.com/" target="_blank">阿里云存证</a>
+            <a class="ev-link" href="https://www.baidu.com/s?wd=区块链存证平台" target="_blank" style="margin-left:6px">更多平台</a>
+          </div>
+          <div class="ev-card">
+            <div class="ev-title">📜 著作权登记</div>
+            <div class="ev-desc">中国版权保护中心登记，法律直接推定权属，30-60天出证，费用300-500元</div>
+            <a class="ev-link" href="https://www.ccopyright.com.cn/" target="_blank">中国版权保护中心</a>
+          </div>
+          <div class="ev-card">
+            <div class="ev-title">🏛️ 公证</div>
+            <div class="ev-desc">对设计稿做公证，法律效力最高，但费用较高（1000-3000元），适合高价值设计</div>
+            <a class="ev-link" href="https://www.baidu.com/s?wd=在线公证平台" target="_blank">在线公证平台</a>
+          </div>
+          <div class="ev-card">
+            <div class="ev-title">📧 邮件/消息时间戳</div>
+            <div class="ev-desc">设计完成即发送确认邮件或飞书消息，作为辅助时间证据（不单独成立，但可形成证据链）</div>
+          </div>
+          <div class="ev-card">
+            <div class="ev-title">🗂️ 版本管理归档</div>
+            <div class="ev-desc">使用 Git 管理设计文件版本，每次 commit 都有不可篡改的时间戳（适合技术型团队）</div>
+          </div>
+          <div class="ev-card">
+            <div class="ev-title">📋 设计过程文档</div>
+            <div class="ev-desc">保留草图、修改记录、会议纪要、客户沟通记录，形成完整的创作过程证据链</div>
+          </div>
         </div>
-        <div class="evidence-card">
-          <div class="ev-title">📜 著作权登记</div>
-          <div class="ev-desc">中国版权保护中心登记，法律直接推定权属，30-60天出证，费用300-500元</div>
-          <a class="ev-link" href="https://www.ccopyright.com.cn/" target="_blank">中国版权保护中心</a>
-        </div>
-        <div class="evidence-card">
-          <div class="ev-title">🏛️ 公证</div>
-          <div class="ev-desc">对设计稿做公证，法律效力最高，但费用较高（1000-3000元），适合高价值设计</div>
-          <a class="ev-link" href="https://www.baidu.com/s?wd=在线公证平台" target="_blank">在线公证平台</a>
-        </div>
-        <div class="evidence-card">
-          <div class="ev-title">📧 邮件/消息时间戳</div>
-          <div class="ev-desc">设计完成即发送确认邮件或飞书消息，作为辅助时间证据（不单独成立，但可形成证据链）</div>
-        </div>
-        <div class="evidence-card">
-          <div class="ev-title">🗂️ 版本管理归档</div>
-          <div class="ev-desc">使用 Git 管理设计文件版本，每次 commit 都有不可篡改的时间戳（适合技术型团队）</div>
-        </div>
-        <div class="evidence-card">
-          <div class="ev-title">📋 设计过程文档</div>
-          <div class="ev-desc">保留草图、修改记录、会议纪要、客户沟通记录，形成完整的创作过程证据链</div>
-        </div>
-      </div>
 
-      <hr class="divider" style="margin:28px 0">
+        <hr class="hr" style="margin:28px 0">
 
-      <h3 style="font-size:1rem;margin-bottom:12px">💡 证据留存最佳实践</h3>
-      <div style="color:var(--text2);font-size:0.88rem;line-height:1.8">
-        <p>1. <strong style="color:var(--text)">设计完成即存证</strong> — 不要等到有纠纷才存证，每个版本都应该有时间戳</p>
-        <p>2. <strong style="color:var(--text)">重要项目做著作权登记</strong> — 费用不高，法律效力强</p>
-        <p>3. <strong style="color:var(--text)">过程文档不要删除</strong> — 草图、修改记录、沟通记录都是辅助证据</p>
-        <p>4. <strong style="color:var(--text)">出口产品查目标国专利</strong> — 国内原创不代表海外无冲突</p>
-        <p>5. <strong style="color:var(--text)">字体/素材授权留底</strong> — 授权协议截图+付款凭证都要保存</p>
+        <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:14px;letter-spacing:-0.01em">最佳实践</h3>
+        <div class="practice-list">
+          <p>1. <strong>设计完成即存证</strong> — 不要等到有纠纷才存证，每个版本都应该有时间戳</p>
+          <p>2. <strong>重要项目做著作权登记</strong> — 费用不高，法律效力强</p>
+          <p>3. <strong>过程文档不要删除</strong> — 草图、修改记录、沟通记录都是辅助证据</p>
+          <p>4. <strong>出口产品查目标国专利</strong> — 国内原创不代表海外无冲突</p>
+          <p>5. <strong>字体/素材授权留底</strong> — 授权协议截图+付款凭证都要保存</p>
+        </div>
+
       </div>
     </div>
   </div>
@@ -921,12 +1208,12 @@
 
 <!-- Footer -->
 <footer class="footer">
-  <p>包装原创性检测工具 | 免费开源 | 零成本验证</p>
-  <p style="margin-top:4px">
-    <a href="https://github.com/nyctocereusnicola/packaging-check" target="_blank">GitHub 仓库</a>
+  <p>包装原创性检测工具 · 免费开源 · 零成本验证</p>
+  <p style="margin-top:6px">
+    <a href="https://github.com/nyctocereusnicola/packaging-check" target="_blank">GitHub</a>
     &nbsp;·&nbsp; 仅提供检索跳转，不收集任何数据
   </p>
-  <p style="margin-top:4px;font-size:0.75rem;color:var(--text3)">本工具仅提供检索平台跳转，不提供法律意见。专业知识产权事务请咨询专业律师或知识产权代理机构。</p>
+  <p class="disclaimer">本工具仅提供检索平台跳转，不提供法律意见。专业知识产权事务请咨询专业律师或知识产权代理机构。</p>
 </footer>
 
 <!-- Toast -->
@@ -936,9 +1223,19 @@
 // ============ Tab Switching ============
 function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tabbar-btn').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
   document.getElementById('tab-' + tab).style.display = 'block';
-  event.target.classList.add('active');
+  // Update tabbar buttons
+  const tabMap = { step1:0, step4:1, step2:2, step3:3, checklist:4, evidence:5 };
+  const tbBtns = document.querySelectorAll('.tabbar-btn');
+  if (tbBtns[tabMap[tab]]) tbBtns[tabMap[tab]].classList.add('active');
+  // Update nav links
+  const navBtns = document.querySelectorAll('.nav-link');
+  const navMap = { step1:0, step4:1, step2:2, step3:3, checklist:4, evidence:5 };
+  if (navBtns[navMap[tab]]) navBtns[navMap[tab]].classList.add('active');
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ============ Image Upload ============
@@ -970,7 +1267,7 @@ fileInput.addEventListener('change', (e) => {
 
 async function uploadImage(file) {
   if (file.size > 10 * 1024 * 1024) {
-    showToast('图片大小不能超过10MB');
+    showToast('图片大小不能超过 10MB');
     return;
   }
 
@@ -993,7 +1290,7 @@ async function uploadImage(file) {
         currentImageUrl = url;
         showPreview(url, file.name);
         enableImageSearchButtons(url);
-        showToast('✅ 图片上传成功！');
+        showToast('图片上传成功');
       } else {
         throw new Error('上传返回异常');
       }
@@ -1002,7 +1299,7 @@ async function uploadImage(file) {
     }
   } catch (err) {
     console.error(err);
-    showToast('❌ 上传失败，请尝试粘贴图片URL');
+    showToast('上传失败，请尝试粘贴图片 URL');
   } finally {
     loading.classList.remove('active');
   }
@@ -1011,17 +1308,17 @@ async function uploadImage(file) {
 function useImageUrl() {
   const url = document.getElementById('imageUrlInput').value.trim();
   if (!url) {
-    showToast('请输入图片URL');
+    showToast('请输入图片 URL');
     return;
   }
   if (!url.startsWith('http')) {
-    showToast('请输入有效的图片URL（以http开头）');
+    showToast('请输入有效的图片 URL');
     return;
   }
   currentImageUrl = url;
-  showPreview(url, '用户提供的URL');
+  showPreview(url, '用户提供的 URL');
   enableImageSearchButtons(url);
-  showToast('✅ 图片URL已设置');
+  showToast('图片 URL 已设置');
 }
 
 function showPreview(url, name) {
@@ -1030,7 +1327,7 @@ function showPreview(url, name) {
   const urlDiv = document.getElementById('previewUrl');
 
   img.src = url;
-  urlDiv.innerHTML = `图片URL: <a href="${url}" target="_blank">${url}</a>`;
+  urlDiv.innerHTML = `图片 URL: <a href="${url}" target="_blank">${url}</a>`;
   container.classList.add('active');
 }
 
@@ -1076,7 +1373,7 @@ function updateTmLinks() {
 
 // ============ Checklist Progress ============
 function updateProgress() {
-  const checks = document.querySelectorAll('.checklist input[type="checkbox"]');
+  const checks = document.querySelectorAll('.cl-list input[type="checkbox"]');
   const total = checks.length;
   const checked = [...checks].filter(c => c.checked).length;
   const pct = Math.round((checked / total) * 100);
@@ -1094,7 +1391,7 @@ function loadChecklistState() {
   try {
     const saved = JSON.parse(localStorage.getItem('packaging-check-list'));
     if (saved) {
-      const checks = document.querySelectorAll('.checklist input[type="checkbox"]');
+      const checks = document.querySelectorAll('.cl-list input[type="checkbox"]');
       checks.forEach((c, i) => { if (saved[i] !== undefined) c.checked = saved[i]; });
       updateProgress();
     }
@@ -1104,30 +1401,22 @@ loadChecklistState();
 
 // ============ Export Report ============
 function exportReport() {
-  const checks = document.querySelectorAll('.checklist input[type="checkbox"]');
+  const checks = document.querySelectorAll('.cl-list input[type="checkbox"]');
   const total = checks.length;
   const checked = [...checks].filter(c => c.checked).length;
 
-  let report = '═══════════════════════════════════════════\n';
-  report += '        包装原创性检测报告\n';
-  report += '═══════════════════════════════════════════\n\n';
+  let report = '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  report += '        包 装 原 创 性 检 测 报 告\n';
+  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
   report += `检测日期: ${new Date().toLocaleString('zh-CN')}\n`;
   report += `完成进度: ${checked}/${total} (${Math.round(checked/total*100)}%)\n\n`;
 
   report += '────── 四步检测法 ──────\n\n';
 
-  const steps = [
-    { name: '① 查外观设计专利（最关键）', items: [] },
-    { name: '② 查著作权（版权）', items: [] },
-    { name: '③ 查商标（含立体商标）', items: [] },
-    { name: '④ 全网图像比对', items: [] },
-    { name: '⑤ 创作证据留存', items: [] },
-  ];
-
   checks.forEach((c, i) => {
-    const label = c.closest('li').querySelector('.check-label').textContent;
-    const status = c.checked ? '✅ 已完成' : '⬜ 未完成';
-    report += `${status}  ${label}\n`;
+    const label = c.closest('li').querySelector('.cl-label').textContent;
+    const status = c.checked ? '✓' : '○';
+    report += `  ${status}  ${label}\n`;
   });
 
   report += '\n────── 检测方法要点 ──────\n\n';
@@ -1155,12 +1444,11 @@ function exportReport() {
   report += '4. 字体/素材授权协议截图+付款凭证保存\n';
   report += '5. 出口产品需额外检索目标国专利\n';
 
-  report += '\n═══════════════════════════════════════════\n';
+  report += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
   report += '生成工具: 包装原创性检测 | packaging-check\n';
   report += 'https://nyctocereusnicola.github.io/packaging-check/\n';
-  report += '═══════════════════════════════════════════\n';
+  report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
 
-  // Download as text file
   const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1169,7 +1457,7 @@ function exportReport() {
   a.click();
   URL.revokeObjectURL(url);
 
-  showToast('📄 检测报告已导出！');
+  showToast('检测报告已导出');
 }
 
 // ============ Toast ============
