@@ -760,7 +760,7 @@
         <div class="upload-zone" id="uploadArea" onclick="document.getElementById('fileInput').click()">
           <div class="uz-icon">↑</div>
           <p>点击上传包装图片或拖拽到此处</p>
-          <p class="uz-hint">支持 JPG / PNG / WebP，最大 10MB → 上传失败可直接粘贴图片公网 URL</p>
+          <p class="uz-hint">支持 JPG / PNG / WebP，最大 10MB → 本地预览后一键打开搜图页面</p>
           <input type="file" id="fileInput" accept="image/*">
         </div>
 
@@ -768,6 +768,18 @@
         <div class="input-row">
           <input type="text" id="imageUrlInput" placeholder="https://example.com/packaging.jpg">
           <button class="btn-primary" onclick="useImageUrl()">使用此 URL</button>
+        </div>
+
+        <div style="margin-top:16px;padding:12px 16px;background:rgba(45,125,210,0.06);border:1px solid rgba(45,125,210,0.15);border-radius:8px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:500;color:#2d7dd2;">🔑 增强模式：imgbb API Key</span>
+            <span id="imgbbStatus" style="font-size:11px;padding:2px 8px;border-radius:4px;"></span>
+          </div>
+          <p style="font-size:12px;color:#888;margin:0 0 8px 0;">填入免费 API Key 后，图片自动上传至 imgbb 获取永久公网链接，搜图按钮可直接跳转搜索结果页。<a href="https://api.imgbb.com/" target="_blank" style="color:#2d7dd2;">免费注册获取 →</a></p>
+          <div class="input-row">
+            <input type="text" id="imgbbKeyInput" placeholder="粘贴你的 imgbb API Key" style="font-size:12px;">
+            <button class="btn-primary" onclick="saveImgbbKey()" style="font-size:12px;padding:6px 14px;">保存</button>
+          </div>
         </div>
 
         <!-- Preview -->
@@ -1274,78 +1286,66 @@ async function uploadImage(file) {
   const loading = document.getElementById('uploadLoading');
   loading.classList.add('active');
 
-  // 方案1：0x0.st（支持 CORS，无需 API key）
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
+  // 方案1：如果有 imgbb API key，优先使用（支持 CORS，永久链接）
+  const imgbbKey = localStorage.getItem('imgbb_api_key');
+  if (imgbbKey) {
+    try {
+      const base64 = await readFileAsBase64(file);
+      const formData = new FormData();
+      formData.append('key', imgbbKey);
+      formData.append('image', base64);
 
-    const res = await fetch('https://0x0.st', {
-      method: 'POST',
-      body: formData,
-      signal: AbortSignal.timeout(30000)
-    });
+      const res = await fetch('https://api.imgbb.com/1/upload', {
+        method: 'POST',
+        body: formData,
+        signal: AbortSignal.timeout(30000)
+      });
 
-    if (res.ok) {
-      const url = (await res.text()).trim();
-      if (url.startsWith('https://')) {
-        currentImageUrl = url;
-        showPreview(url, file.name);
-        enableImageSearchButtons(url);
-        showToast('图片上传成功');
-        loading.classList.remove('active');
-        return;
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.data && data.data.url) {
+          currentImageUrl = data.data.url;
+          showPreview(data.data.url, file.name);
+          enableImageSearchButtons(data.data.url);
+          showToast('图片上传成功（imgbb 永久链接）');
+          loading.classList.remove('active');
+          return;
+        }
       }
+      throw new Error('imgbb 返回异常');
+    } catch (err) {
+      console.warn('imgbb 上传失败:', err.message);
     }
-    throw new Error('0x0.st 上传失败');
-  } catch (err) {
-    console.warn('0x0.st 失败:', err.message);
   }
 
-  // 方案2：litterbox.catbox.moe（临时图床，1小时有效，支持 CORS）
-  try {
-    const formData = new FormData();
-    formData.append('reqtype', 'fileupload');
-    formData.append('time', '1h');
-    formData.append('fileToUpload', file);
-
-    const res = await fetch('https://litterbox.catbox.moe/resources/internals/api.php', {
-      method: 'POST',
-      body: formData,
-      signal: AbortSignal.timeout(30000)
-    });
-
-    if (res.ok) {
-      const url = (await res.text()).trim();
-      if (url.startsWith('https://')) {
-        currentImageUrl = url;
-        showPreview(url, file.name);
-        enableImageSearchButtons(url);
-        showToast('图片上传成功（临时链接，1小时有效）');
-        loading.classList.remove('active');
-        return;
-      }
-    }
-    throw new Error('litterbox 上传失败');
-  } catch (err) {
-    console.warn('litterbox 失败:', err.message);
-  }
-
-  // 方案3：转 base64 直接预览（不依赖图床，但搜图平台可能无法直接使用 URL）
+  // 方案2：本地预览 + 搜索引擎直接打开（零依赖，100%可靠）
   try {
     const dataUrl = await readFileAsDataUrl(file);
     currentImageUrl = dataUrl;
     showPreview(dataUrl, file.name);
-    // 以图搜图按钮需要公网 URL，base64 不可用，提示用户手动粘贴
-    disableImageSearchButtons();
-    showToast('图片已加载（本地预览模式），搜图请粘贴图片公网URL');
+    enableDirectSearchButtons();
+    showToast('图片已加载 ✓ 点击搜图按钮直接打开搜索页');
     loading.classList.remove('active');
     return;
   } catch (err) {
-    console.warn('base64 回退失败:', err.message);
+    console.error('本地预览失败:', err);
   }
 
   loading.classList.remove('active');
-  showToast('上传失败，请直接粘贴图片公网 URL');
+  showToast('加载失败，请直接粘贴图片公网 URL');
+}
+
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      // 去掉 data:image/xxx;base64, 前缀
+      const base64 = reader.result.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 function readFileAsDataUrl(file) {
@@ -1357,12 +1357,23 @@ function readFileAsDataUrl(file) {
   });
 }
 
-function disableImageSearchButtons() {
-  ['btn-google-lens', 'btn-tineye', 'btn-yandex', 'btn-baidu', 'btn-bing', 'btn-sogou'].forEach(id => {
+// 没有公网URL时的搜图方式：直接打开搜索页首页
+function enableDirectSearchButtons() {
+  const btns = {
+    'btn-google-lens': 'https://lens.google.com/',
+    'btn-tineye': 'https://tineye.com/',
+    'btn-yandex': 'https://yandex.com/images/',
+    'btn-baidu': 'https://graph.baidu.com/pcpage/pcsearch',
+    'btn-bing': 'https://www.bing.com/images/search?q=&view=detailv2&iss=sbi',
+    'btn-sogou': 'https://pic.sogou.com/',
+  };
+
+  Object.entries(btns).forEach(([id, href]) => {
     const el = document.getElementById(id);
     if (el) {
-      el.href = '#';
-      el.classList.add('disabled');
+      el.href = href;
+      el.classList.remove('disabled');
+      el.target = '_blank';
     }
   });
 }
@@ -1380,8 +1391,42 @@ function useImageUrl() {
   currentImageUrl = url;
   showPreview(url, '用户提供的 URL');
   enableImageSearchButtons(url);
-  showToast('图片 URL 已设置');
+  showToast('图片 URL 已设置，搜图按钮可直接跳转');
 }
+
+// ============ imgbb API Key 管理 ============
+function saveImgbbKey() {
+  const key = document.getElementById('imgbbKeyInput').value.trim();
+  if (!key) {
+    localStorage.removeItem('imgbb_api_key');
+    updateImgbbStatus(false);
+    showToast('API Key 已清除');
+    return;
+  }
+  localStorage.setItem('imgbb_api_key', key);
+  updateImgbbStatus(true);
+  showToast('API Key 已保存 ✓ 下次上传图片将自动使用 imgbb');
+}
+
+function updateImgbbStatus(hasKey) {
+  const el = document.getElementById('imgbbStatus');
+  if (hasKey) {
+    el.textContent = '已配置';
+    el.style.background = 'rgba(45,125,210,0.15)';
+    el.style.color = '#2d7dd2';
+  } else {
+    el.textContent = '未配置';
+    el.style.background = 'rgba(255,255,255,0.08)';
+    el.style.color = '#888';
+  }
+}
+
+// 页面加载时恢复 imgbb key 状态
+(function() {
+  const key = localStorage.getItem('imgbb_api_key');
+  updateImgbbStatus(!!key);
+  if (key) document.getElementById('imgbbKeyInput').value = key;
+})();
 
 function showPreview(url, name) {
   const container = document.getElementById('previewContainer');
