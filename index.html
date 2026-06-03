@@ -1464,12 +1464,12 @@ function showPreview(previewSrc, type, publicUrl) {
     `;
     document.getElementById('btnSearchAll').classList.remove('disabled');
   } else {
-    // 仅本地预览 = 需要配置API Key
+    // 仅本地预览 = 跳转到各平台搜图上传页
     statusDiv.innerHTML = `
-      <div class="pi-local">⚠ 仅本地预览，无法自动搜图</div>
-      <div style="font-size:0.76rem;color:var(--text3);margin-top:4px;">请配置上方 imgbb API Key，上传后即可一键全网搜图</div>
+      <div class="pi-local">📷 仅本地预览，点击下方按钮跳转到各平台上传图片搜索</div>
+      <div style="font-size:0.76rem;color:var(--text3);margin-top:4px;">配置 imgbb API Key 可实现一键自动搜图，无需逐个手动上传</div>
     `;
-    document.getElementById('btnSearchAll').classList.add('disabled');
+    enableUploadPageButtons();
   }
 
   container.classList.add('active');
@@ -1495,30 +1495,37 @@ function useImageUrl() {
 
 // ============ 一键全网搜图 ============
 function searchAllEngines() {
-  if (!currentImageUrl) {
-    showToast('请先上传图片获取公网链接');
-    return;
+  if (currentImageUrl) {
+    // 有公网URL：直接跳搜索结果
+    const encodedUrl = encodeURIComponent(currentImageUrl);
+    const urls = [
+      `https://lens.google.com/uploadbyurl?url=${encodedUrl}`,
+      `https://tineye.com/search/?url=${encodedUrl}`,
+      `https://yandex.com/images/search?rpt=imageview&url=${encodedUrl}`,
+      `https://graph.baidu.com/pcpage/pcsearch?image=${encodedUrl}`,
+      `https://www.bing.com/images/search?q=imgurl:${encodedUrl}&view=detailv2&iss=sbi`,
+      `https://pic.sogou.com/ris?query=${encodedUrl}&flag=1&drag=0`,
+    ];
+    const names = ['Google Lens', 'TinEye', 'Yandex', '百度识图', 'Bing', '搜狗'];
+    urls.forEach((url, i) => {
+      setTimeout(() => window.open(url, '_blank'), i * 300);
+    });
+    showToast(`正在打开 ${names.length} 个搜图平台...`);
+  } else {
+    // 无公网URL：跳转到各平台上传页
+    const uploadPages = [
+      { url: 'https://lens.google.com/', name: 'Google Lens' },
+      { url: 'https://tineye.com/', name: 'TinEye' },
+      { url: 'https://yandex.com/images/', name: 'Yandex' },
+      { url: 'https://graph.baidu.com/', name: '百度识图' },
+      { url: 'https://www.bing.com/visualsearch', name: 'Bing' },
+      { url: 'https://pic.sogou.com/', name: '搜狗' },
+    ];
+    uploadPages.forEach((p, i) => {
+      setTimeout(() => window.open(p.url, '_blank'), i * 300);
+    });
+    showToast('正在打开 6 个搜图平台，请在各平台上传图片搜索');
   }
-
-  const encodedUrl = encodeURIComponent(currentImageUrl);
-  const urls = [
-    `https://lens.google.com/uploadbyurl?url=${encodedUrl}`,
-    `https://tineye.com/search/?url=${encodedUrl}`,
-    `https://yandex.com/images/search?rpt=imageview&url=${encodedUrl}`,
-    `https://graph.baidu.com/pcpage/pcsearch?image=${encodedUrl}`,
-    `https://www.bing.com/images/search?q=imgurl:${encodedUrl}&view=detailv2&iss=sbi`,
-    `https://pic.sogou.com/ris?query=${encodedUrl}&flag=1&drag=0`,
-  ];
-
-  const names = ['Google Lens', 'TinEye', 'Yandex', '百度识图', 'Bing', '搜狗'];
-
-  urls.forEach((url, i) => {
-    setTimeout(() => {
-      window.open(url, '_blank');
-    }, i * 300);  // 间隔300ms避免浏览器拦截
-  });
-
-  showToast(`正在打开 ${names.length} 个搜图平台...`);
 }
 
 // 启用单个搜图按钮（有公网URL时）
@@ -1542,6 +1549,29 @@ function enableImageSearchButtons(url) {
     }
   });
 
+  document.getElementById('btnSearchAll').classList.remove('disabled');
+}
+
+// 启用搜图按钮（无公网URL时，跳转到各平台的上传页面）
+function enableUploadPageButtons() {
+  const uploadPages = {
+    'btn-google-lens': 'https://lens.google.com/',
+    'btn-tineye': 'https://tineye.com/',
+    'btn-yandex': 'https://yandex.com/images/',
+    'btn-baidu': 'https://graph.baidu.com/',
+    'btn-bing': 'https://www.bing.com/visualsearch',
+    'btn-sogou': 'https://pic.sogou.com/',
+  };
+
+  Object.entries(uploadPages).forEach(([id, href]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.href = href;
+      el.classList.remove('disabled');
+    }
+  });
+
+  // 一键全网搜图：打开所有平台上传页
   document.getElementById('btnSearchAll').classList.remove('disabled');
 }
 
